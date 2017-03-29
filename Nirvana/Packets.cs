@@ -24,16 +24,23 @@ namespace Nirvana
 
         public void leaveParty()
         {
-            //Вычисляем размер пакета
-            int packetSize = leavePartyPkt.Length;
-
-            if (leavePartyAddress == 0)
+            try
             {
-                //Загружаем пакет в память
-                loadPacket(leavePartyPkt, ref leavePartyAddress, ref leavePartyAddressRev);
-            }
+                //Вычисляем размер пакета
+                int packetSize = leavePartyPkt.Length;
 
-            sendPacket(leavePartyAddressRev, packetSize);
+                if (leavePartyAddress == 0)
+                {
+                    //Загружаем пакет в память
+                    loadPacket(leavePartyPkt, ref leavePartyAddress, ref leavePartyAddressRev);
+                }
+
+                sendPacket(leavePartyAddressRev, packetSize);
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
         }
         #endregion
 
@@ -49,20 +56,27 @@ namespace Nirvana
 
         public void inviteParty(int playerId)
         {
-            //Узнаем размер пакета
-            int packetSize = invitePartyPkt.Length;
-
-            if (invitePartyAddress == 0)
+            try
             {
-                //Загружаем пакет в память
-                loadPacket(invitePartyPkt, ref invitePartyAddress, ref invitePartyAddressRev);
+                //Узнаем размер пакета
+                int packetSize = invitePartyPkt.Length;
+
+                if (invitePartyAddress == 0)
+                {
+                    //Загружаем пакет в память
+                    loadPacket(invitePartyPkt, ref invitePartyAddress, ref invitePartyAddressRev);
+                }
+
+                byte[] playerIdRev = BitConverter.GetBytes(playerId);
+                playerIdRev.Reverse();
+                MemWriteBytes(oph, invitePartyAddress + 2, playerIdRev);
+
+                sendPacket(invitePartyAddressRev, packetSize);
             }
-
-            byte[] playerIdRev = BitConverter.GetBytes(playerId);
-            playerIdRev.Reverse();
-            MemWriteBytes(oph, invitePartyAddress + 2, playerIdRev);
-
-            sendPacket(invitePartyAddressRev, packetSize);
+            catch (Exception ex)
+            {
+                throw ex;
+            }
         }
         #endregion
 
@@ -78,20 +92,27 @@ namespace Nirvana
 
         public void kickFromParty(int playerId)
         {
-            //Узнаем размер пакета
-            int packetSize = kickFromPartyPkt.Length;
-
-            if (kickFromAddress == 0)
+            try
             {
-                //Загружаем пакет в память
-                loadPacket(kickFromPartyPkt, ref kickFromAddress, ref kickFromPartyAddressRev);
+                //Узнаем размер пакета
+                int packetSize = kickFromPartyPkt.Length;
+
+                if (kickFromAddress == 0)
+                {
+                    //Загружаем пакет в память
+                    loadPacket(kickFromPartyPkt, ref kickFromAddress, ref kickFromPartyAddressRev);
+                }
+
+                byte[] playerIdRev = BitConverter.GetBytes(playerId);
+                playerIdRev.Reverse();
+                MemWriteBytes(oph, kickFromAddress + 2, playerIdRev);
+
+                sendPacket(kickFromPartyAddressRev, packetSize);
             }
-
-            byte[] playerIdRev = BitConverter.GetBytes(playerId);
-            playerIdRev.Reverse();
-            MemWriteBytes(oph, kickFromAddress + 2, playerIdRev);
-
-            sendPacket(kickFromPartyAddressRev, packetSize);
+            catch (Exception ex)
+            {
+                throw ex;
+            }
         }
         #endregion
 
@@ -107,20 +128,27 @@ namespace Nirvana
 
         public void ChangePl(int playerId)
         {
-            //Get size of the packet
-            int packetSize = changePlPkt.Length;
-
-            if (changePlAddress == 0)
+            try
             {
-                //load packet in memory
-                loadPacket(changePlPkt, ref changePlAddress, ref changePlAddressRev);
+                //Узнаем размер пакета
+                int packetSize = changePlPkt.Length;
+
+                if (changePlAddress == 0)
+                {
+                    //загружаем пакет в память
+                    loadPacket(changePlPkt, ref changePlAddress, ref changePlAddressRev);
+                }
+
+                byte[] playerIdRev = BitConverter.GetBytes(playerId);
+                playerIdRev.Reverse();
+                MemWriteBytes(oph, changePlAddress + 2, playerIdRev);
+
+                sendPacket(changePlAddressRev, packetSize);
             }
-
-            byte[] playerIdRev = BitConverter.GetBytes(playerId);
-            playerIdRev.Reverse();
-            MemWriteBytes(oph, changePlAddress + 2, playerIdRev);
-
-            sendPacket(changePlAddressRev, packetSize);
+            catch (Exception ex)
+            {
+                throw ex;
+            }
         }
         #endregion
 
@@ -138,24 +166,31 @@ namespace Nirvana
 
         public void acceptPartyInvite(int playerId, int partyInviteCounter)
         {
-            //Узнаем размер пакета
-            int packetSize = acceptPartyInvitePkt.Length;
-
-            if (acceptPartyInviteAddress == 0)
+            try
             {
-                //Загружаем пакет в память
-                loadPacket(acceptPartyInvitePkt, ref acceptPartyInviteAddress, ref acceptPartyInviteAddressRev);
+                //Узнаем размер пакета
+                int packetSize = acceptPartyInvitePkt.Length;
+
+                if (acceptPartyInviteAddress == 0)
+                {
+                    //Загружаем пакет в память
+                    loadPacket(acceptPartyInvitePkt, ref acceptPartyInviteAddress, ref acceptPartyInviteAddressRev);
+                }
+
+                byte[] playerIdRev = BitConverter.GetBytes(playerId);
+                playerIdRev.Reverse();
+                MemWriteBytes(oph, acceptPartyInviteAddress + 2, playerIdRev);
+
+                byte[] partyInviteCounterRev = BitConverter.GetBytes(partyInviteCounter);
+                partyInviteCounterRev.Reverse();
+                MemWriteBytes(oph, acceptPartyInviteAddress + 6, partyInviteCounterRev);
+
+                sendPacket(acceptPartyInviteAddressRev, packetSize);
             }
-
-            byte[] playerIdRev = BitConverter.GetBytes(playerId);
-            playerIdRev.Reverse();
-            MemWriteBytes(oph, acceptPartyInviteAddress + 2, playerIdRev);
-
-            byte[] partyInviteCounterRev = BitConverter.GetBytes(partyInviteCounter);
-            partyInviteCounterRev.Reverse();
-            MemWriteBytes(oph, acceptPartyInviteAddress + 6, partyInviteCounterRev);
-
-            sendPacket(acceptPartyInviteAddressRev, packetSize);
+            catch (Exception ex)
+            {
+                throw ex;
+            }
         }
         #endregion
 
@@ -171,20 +206,27 @@ namespace Nirvana
 
         public void callShamanParty(int playerId)
         {
-            //Узнаем размер пакета
-            int packetSize = callShamanPkt.Length;
-
-            if (callShamanAddress == 0)
+            try
             {
-                //Загружаем пакет в память
-                loadPacket(callShamanPkt, ref callShamanAddress, ref callShamanAddressRev);
+                //Узнаем размер пакета
+                int packetSize = callShamanPkt.Length;
+
+                if (callShamanAddress == 0)
+                {
+                    //Загружаем пакет в память
+                    loadPacket(callShamanPkt, ref callShamanAddress, ref callShamanAddressRev);
+                }
+
+                byte[] playerIdRev = BitConverter.GetBytes(playerId);
+                playerIdRev.Reverse();
+                MemWriteBytes(oph, callShamanAddress + 8, playerIdRev);
+
+                sendPacket(callShamanAddressRev, packetSize);
             }
-
-            byte[] playerIdRev = BitConverter.GetBytes(playerId);
-            playerIdRev.Reverse();
-            MemWriteBytes(oph, callShamanAddress + 8, playerIdRev);
-
-            sendPacket(callShamanAddressRev, packetSize);
+            catch (Exception ex)
+            {
+                throw ex;
+            }
         }
         #endregion
 
@@ -200,20 +242,27 @@ namespace Nirvana
 
         public void acceptCallShamanParty(int playerId)
         {
-            //Узнаем размер пакета
-            int packetSize = acceptСallShamanPkt.Length;
-
-            if (acceptСallShamanAddress == 0)
+            try
             {
-                //Загружаем пакет в память
-                loadPacket(acceptСallShamanPkt, ref acceptСallShamanAddress, ref acceptСallShamanAddressRev);
+                //Узнаем размер пакета
+                int packetSize = acceptСallShamanPkt.Length;
+
+                if (acceptСallShamanAddress == 0)
+                {
+                    //Загружаем пакет в память
+                    loadPacket(acceptСallShamanPkt, ref acceptСallShamanAddress, ref acceptСallShamanAddressRev);
+                }
+
+                byte[] playerIdRev = BitConverter.GetBytes(playerId);
+                playerIdRev.Reverse();
+                MemWriteBytes(oph, acceptСallShamanAddress + 4, playerIdRev);
+
+                sendPacket(acceptСallShamanAddressRev, packetSize);
             }
-
-            byte[] playerIdRev = BitConverter.GetBytes(playerId);
-            playerIdRev.Reverse();
-            MemWriteBytes(oph, acceptСallShamanAddress + 4, playerIdRev);
-
-            sendPacket(acceptСallShamanAddressRev, packetSize);
+            catch (Exception ex)
+            {
+                throw ex;
+            }
         }
         #endregion
 
@@ -229,20 +278,27 @@ namespace Nirvana
 
         public void selectNpc(int npcWid)
         {
-            //Узнаем размер пакета
-            int packetSize = selectNpcPkt.Length;
-
-            if (selectNpcAddress == 0)
+            try
             {
-                //Загружаем пакет в память
-                loadPacket(selectNpcPkt, ref selectNpcAddress, ref selectNpcAddressRev);
+                //Узнаем размер пакета
+                int packetSize = selectNpcPkt.Length;
+
+                if (selectNpcAddress == 0)
+                {
+                    //Загружаем пакет в память
+                    loadPacket(selectNpcPkt, ref selectNpcAddress, ref selectNpcAddressRev);
+                }
+
+                byte[] npcWidRev = BitConverter.GetBytes(npcWid);
+                npcWidRev.Reverse();
+                MemWriteBytes(oph, selectNpcAddress + 2, npcWidRev);
+
+                sendPacket(selectNpcAddressRev, packetSize);
             }
-
-            byte[] npcWidRev = BitConverter.GetBytes(npcWid);
-            npcWidRev.Reverse();
-            MemWriteBytes(oph, selectNpcAddress + 2, npcWidRev);
-
-            sendPacket(selectNpcAddressRev, packetSize);
+            catch (Exception ex)
+            {
+                throw ex;
+            }
         }
         #endregion
 
@@ -258,20 +314,27 @@ namespace Nirvana
 
         public void talkToNpc(int npcWid)
         {
-            //Узнаем размер пакета
-            int packetSize = talkToNpcPkt.Length;
-
-            if (talkToNpcAddress == 0)
+            try
             {
-                //Загружаем пакет в память
-                loadPacket(talkToNpcPkt, ref talkToNpcAddress, ref talkToNpcAddressRev);
+                //Узнаем размер пакета
+                int packetSize = talkToNpcPkt.Length;
+
+                if (talkToNpcAddress == 0)
+                {
+                    //Загружаем пакет в память
+                    loadPacket(talkToNpcPkt, ref talkToNpcAddress, ref talkToNpcAddressRev);
+                }
+
+                byte[] npcWidRev = BitConverter.GetBytes(npcWid);
+                npcWidRev.Reverse();
+                MemWriteBytes(oph, talkToNpcAddress + 2, npcWidRev);
+
+                sendPacket(talkToNpcAddressRev, packetSize);
             }
-
-            byte[] npcWidRev = BitConverter.GetBytes(npcWid);
-            npcWidRev.Reverse();
-            MemWriteBytes(oph, talkToNpcAddress + 2, npcWidRev);
-
-            sendPacket(talkToNpcAddressRev, packetSize);
+            catch (Exception ex)
+            {
+                throw ex;
+            }
         }
         #endregion
 
@@ -288,20 +351,27 @@ namespace Nirvana
 
         public void takeQuest(int questWid)
         {
-            //Узнаем размер пакета
-            int packetSize = takeQuestPkt.Length;
-
-            if (takeQuestAddress == 0)
+            try
             {
-                //Загружаем пакет в память
-                loadPacket(takeQuestPkt, ref takeQuestAddress, ref takeQuestAddressRev);
+                //Узнаем размер пакета
+                int packetSize = takeQuestPkt.Length;
+
+                if (takeQuestAddress == 0)
+                {
+                    //Загружаем пакет в память
+                    loadPacket(takeQuestPkt, ref takeQuestAddress, ref takeQuestAddressRev);
+                }
+
+                byte[] questWidRev = BitConverter.GetBytes(questWid);
+                questWidRev.Reverse();
+                MemWriteBytes(oph, takeQuestAddress + 10, questWidRev);
+
+                sendPacket(takeQuestAddressRev, packetSize);
             }
-
-            byte[] questWidRev = BitConverter.GetBytes(questWid);
-            questWidRev.Reverse();
-            MemWriteBytes(oph, takeQuestAddress + 10, questWidRev);
-
-            sendPacket(takeQuestAddressRev, packetSize);
+            catch (Exception ex)
+            {
+                throw ex;
+            }
         }
         #endregion
 
@@ -312,22 +382,29 @@ namespace Nirvana
         /// <param name="packetSize"></param>
         public void sendPacket(byte[] packetLocation, int packetSize)
         {
-            if (sendPacketOpcodeAddress == 0)
+            try
             {
-                loadSendPacketOpcode();
+                if (sendPacketOpcodeAddress == 0)
+                {
+                    loadSendPacketOpcode();
+                }
+
+                MemWriteBytes(oph, packetAddressLocation, packetLocation);
+                MemWriteByte(oph, packetSizeAddress, (byte)packetSize);
+
+                //Запускаем опткод
+                IntPtr threadHandle = CreateRemoteThread(oph, sendPacketOpcodeAddress);
+
+                //Ждем завершения
+                WaitForSingleObject(threadHandle);
+
+                //Закрываем поток
+                WinApi.CloseHandle(threadHandle);
             }
-
-            MemWriteBytes(oph, packetAddressLocation, packetLocation);
-            MemWriteByte(oph, packetSizeAddress, (byte)packetSize);
-
-            //Запускаем опткод
-            IntPtr threadHandle = CreateRemoteThread(oph, sendPacketOpcodeAddress);
-
-            //Ждем завершения
-            WaitForSingleObject(threadHandle);
-
-            //Закрываем поток
-            WinApi.CloseHandle(threadHandle);
+            catch (Exception ex)
+            {
+                throw ex;
+            }
         }
 
         /// <summary>
@@ -338,16 +415,23 @@ namespace Nirvana
         /// <param name="packetAddressRev"></param>
         private void loadPacket(byte[] packet, ref int packetAddress, ref byte[] packetAddressRev)
         {
-            //По заданному дескриптору резервируем память для нашего пакета
-            packetAddress = (int)WinApi.VirtualAllocEx(oph, (IntPtr)0, packet.Length, WinApi.AllocationType.Commit, WinApi.MemoryProtection.ExecuteReadWrite);
+            try
+            {
+                //По заданному дескриптору резервируем память для нашего пакета
+                packetAddress = (int)WinApi.VirtualAllocEx(oph, (IntPtr)0, packet.Length, WinApi.AllocationType.Commit, WinApi.MemoryProtection.ExecuteReadWrite);
 
-            //Записываем пакет в зарезервированную память
-            MemWriteBytes(oph, packetAddress, packet);
+                //Записываем пакет в зарезервированную память
+                MemWriteBytes(oph, packetAddress, packet);
 
-            //Реверсируем пакет, так как в памяти пакеты читаются с конца
-            packetAddressRev = BitConverter.GetBytes(packetAddress);
+                //Реверсируем пакет, так как в памяти пакеты читаются с конца
+                packetAddressRev = BitConverter.GetBytes(packetAddress);
 
-            packetAddressRev.Reverse();
+                packetAddressRev.Reverse();
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }            
         }
 
         /// <summary>
@@ -358,9 +442,16 @@ namespace Nirvana
         /// <param name="value"></param>
         public static void MemWriteBytes(IntPtr processHandle, int address, byte[] value)
         {
-            bool success;
-            int nBytesRead = 0;
-            success = WinApi.WriteProcessMemory(processHandle, address, value, value.Length, out nBytesRead);
+            try
+            {
+                bool success;
+                int nBytesRead = 0;
+                success = WinApi.WriteProcessMemory(processHandle, address, value, value.Length, out nBytesRead);
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            } 
         }
 
         /// <summary>
@@ -369,9 +460,16 @@ namespace Nirvana
         /// <param name="threadHandle"></param>
         public static void WaitForSingleObject(IntPtr threadHandle)
         {
-            if (WinApi.WaitForSingleObject(threadHandle, INFINITE) != WAIT_OBJECT_0)
+            try
             {
-                CalcMethods.Logging("Failed waiting for single object");
+                if (WinApi.WaitForSingleObject(threadHandle, INFINITE) != WAIT_OBJECT_0)
+                {
+                    CalcMethods.Logging("Failed waiting for single object");
+                }
+            }
+            catch (Exception ex)
+            {
+                throw ex;
             }
         }
 
@@ -383,8 +481,15 @@ namespace Nirvana
         /// <returns></returns>
         public static IntPtr CreateRemoteThread(IntPtr processHandle, int address)
         {
-            IntPtr x = IntPtr.Zero;
-            return WinApi.CreateRemoteThread(processHandle, (IntPtr)0, 0, (IntPtr)address, (IntPtr)0, 0, out x);
+            try
+            {
+                IntPtr x = IntPtr.Zero;
+                return WinApi.CreateRemoteThread(processHandle, (IntPtr)0, 0, (IntPtr)address, (IntPtr)0, 0, out x);
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            } 
         }
 
         /// <summary>
@@ -395,10 +500,17 @@ namespace Nirvana
         /// <param name="value"></param>
         public static void MemWriteByte(IntPtr processHandle, int address, byte value)
         {
-            bool success;
-            byte[] buffer = BitConverter.GetBytes(value);
-            int nBytesRead = 0;
-            success = WinApi.WriteProcessMemory(processHandle, address, buffer, 1, out nBytesRead);
+            try
+            {
+                bool success;
+                byte[] buffer = BitConverter.GetBytes(value);
+                int nBytesRead = 0;
+                success = WinApi.WriteProcessMemory(processHandle, address, buffer, 1, out nBytesRead);
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
         }
 
         //Рабочие переменные - адреса
@@ -432,21 +544,28 @@ namespace Nirvana
         /// </summary>
         private void loadSendPacketOpcode()
         {
-            //Резервирование памяти
-            sendPacketOpcodeAddress = (int)WinApi.VirtualAllocEx(oph, (IntPtr)0, sendPacketOpcode.Length, WinApi.AllocationType.Commit, WinApi.MemoryProtection.ExecuteReadWrite);
+            try
+            {
+                //Резервирование памяти
+                sendPacketOpcodeAddress = (int)WinApi.VirtualAllocEx(oph, (IntPtr)0, sendPacketOpcode.Length, WinApi.AllocationType.Commit, WinApi.MemoryProtection.ExecuteReadWrite);
 
-            //Запись в память
-            MemWriteBytes(oph, sendPacketOpcodeAddress, sendPacketOpcode);
+                //Запись в память
+                MemWriteBytes(oph, sendPacketOpcodeAddress, sendPacketOpcode);
 
-            //Загружаем в записанный в память опткод инвертированные BaseAddress и SendPacket
-            byte[] functionAddress = BitConverter.GetBytes(Offsets.SendPacket);
-            functionAddress.Reverse();
-            byte[] realBaseAddress = BitConverter.GetBytes(Offsets.BaseAdress);
-            realBaseAddress.Reverse();
-            MemWriteBytes(oph, sendPacketOpcodeAddress + 2, functionAddress);
-            MemWriteBytes(oph, sendPacketOpcodeAddress + 8, realBaseAddress);
-            packetAddressLocation = sendPacketOpcodeAddress + 16;
-            packetSizeAddress = sendPacketOpcodeAddress + 21;
+                //Загружаем в записанный в память опткод инвертированные BaseAddress и SendPacket
+                byte[] functionAddress = BitConverter.GetBytes(Offsets.SendPacket);
+                functionAddress.Reverse();
+                byte[] realBaseAddress = BitConverter.GetBytes(Offsets.BaseAdress);
+                realBaseAddress.Reverse();
+                MemWriteBytes(oph, sendPacketOpcodeAddress + 2, functionAddress);
+                MemWriteBytes(oph, sendPacketOpcodeAddress + 8, realBaseAddress);
+                packetAddressLocation = sendPacketOpcodeAddress + 16;
+                packetSizeAddress = sendPacketOpcodeAddress + 21;
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
         }
 
     }

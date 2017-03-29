@@ -170,18 +170,25 @@ namespace Nirvana
         /// <returns></returns>
         public static int MobSearch(IntPtr oph, string name)
         {
-            int mobs_count = ReadInt(oph, Offsets.BaseAdress, Offsets.OffsetsMobsCount);
-            for (int i = 0; i < mobs_count; i++)
+            try
             {
-                string mob_name = ReadString(oph, Offsets.BaseAdress, Offsets.OffsetsNameMob(i));
-                if (mob_name.Length > 0)
+                int mobs_count = ReadInt(oph, Offsets.BaseAdress, Offsets.OffsetsMobsCount);
+                for (int i = 0; i < mobs_count; i++)
                 {
-                    //если имя моба/NPC/пета совпадает с заданным, возвращает его wid
-                    if (mob_name.IndexOf(name) != -1)
-                        return ReadInt(oph, Offsets.BaseAdress, Offsets.OffsetsWidMob(i));
-                }             
+                    string mob_name = ReadString(oph, Offsets.BaseAdress, Offsets.OffsetsNameMob(i));
+                    if (mob_name.Length > 0)
+                    {
+                        //если имя моба/NPC/пета совпадает с заданным, возвращает его wid
+                        if (mob_name.IndexOf(name) != -1)
+                            return ReadInt(oph, Offsets.BaseAdress, Offsets.OffsetsWidMob(i));
+                    }
+                }
+                return 0;
             }
-            return 0;
+            catch (Exception ex)
+            {
+                throw ex;
+            }
         }
 
         /// <summary>
@@ -245,31 +252,38 @@ namespace Nirvana
         /// <returns></returns>
         public static int[] CalcControlAddress(IntPtr oph)
         {
-            int[] result = { 0, 0 };
-            string name_control = "";
-            int[] offset_win_struct = { 0x1c, 0x18, 0x8, 0x74 };
-            int address_win_struct = ReadInt(oph, Offsets.BaseAdress, offset_win_struct);
-
-            int temp_address = CalcInt32Value(oph, address_win_struct + 0x1cc);
-            for (int k = 0; k < 50; k++)
+            try
             {
-                int window_address = CalcInt32Value(oph, temp_address + 0x4);
-                for (int j = 0; j < k; j++)
+                int[] result = { 0, 0 };
+                string name_control = "";
+                int[] offset_win_struct = { 0x1c, 0x18, 0x8, 0x74 };
+                int address_win_struct = ReadInt(oph, Offsets.BaseAdress, offset_win_struct);
+
+                int temp_address = CalcInt32Value(oph, address_win_struct + 0x1cc);
+                for (int k = 0; k < 50; k++)
                 {
-                    window_address = CalcInt32Value(oph, window_address + 0x4);
+                    int window_address = CalcInt32Value(oph, temp_address + 0x4);
+                    for (int j = 0; j < k; j++)
+                    {
+                        window_address = CalcInt32Value(oph, window_address + 0x4);
+                    }
+                    int controlstruct_address = CalcInt32Value(oph, window_address + 0x8);
+                    window_address = CalcInt32Value(oph, controlstruct_address + 0x18);
+                    name_control = CalcStringValue_ASCII(oph, window_address + 0x0);
+                    if (name_control.IndexOf("Btn_Back") != -1)
+                    {
+                        int address_to_command_control = CalcInt32Value(oph, controlstruct_address + 0x1c);
+                        result[0] = address_win_struct;
+                        result[1] = address_to_command_control;
+                        return result;
+                    }
                 }
-                int controlstruct_address = CalcInt32Value(oph, window_address + 0x8);
-                window_address = CalcInt32Value(oph, controlstruct_address + 0x18);
-                name_control = CalcStringValue_ASCII(oph, window_address + 0x0);
-                if (name_control.IndexOf("Btn_Back") != -1)
-                {
-                    int address_to_command_control = CalcInt32Value(oph, controlstruct_address + 0x1c);
-                    result[0] = address_win_struct;
-                    result[1] = address_to_command_control;
-                    return result;
-                }
+                return result;
             }
-            return result;
+            catch (Exception ex)
+            {
+                throw ex;
+            }
         }
 
         /// <summary>
@@ -279,8 +293,15 @@ namespace Nirvana
         /// <returns></returns>
         public static int CalcAddressActiveWindow(IntPtr oph)
         {
-            int[] offset_win_struct = { 0x1c, 0x18, 0x8, 0x74 };
-            return ReadInt(oph, Offsets.BaseAdress, offset_win_struct);
+            try
+            {
+                int[] offset_win_struct = { 0x1c, 0x18, 0x8, 0x74 };
+                return ReadInt(oph, Offsets.BaseAdress, offset_win_struct);
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
         }
 
         /// <summary>
@@ -292,49 +313,56 @@ namespace Nirvana
         /// <returns></returns>
         public static int[] CalcWindowAddress(IntPtr oph, string window_name, string control_name)
         {
-            int[] result = { 0, 0};
-            string name_control = "";
-            string name_window = "";
-            int[] offset_win_struct = { 0x1c, 0x18, 0x8, 0x8C};
-            int address_win_struct = ReadInt(oph, Offsets.BaseAdress, offset_win_struct);
-            int windowstruct_adress = 0;
-
-            for (int k = 0; k<1000; k++)
+            try
             {
-                int window_address = CalcInt32Value(oph, address_win_struct + 0x0);
-                for (int j = 0; j < k; j++)
-                {
-                    window_address = CalcInt32Value(oph, window_address + 0x0);
-                }
-                windowstruct_adress = CalcInt32Value(oph, window_address + 0x8);
-                window_address = CalcInt32Value(oph, windowstruct_adress + 0x4c);
-                name_window = CalcStringValue_ASCII(oph, window_address + 0x0);
-                if (name_window.IndexOf(window_name) != -1)
-                {
-                    result[0] = windowstruct_adress;
-                    break;
-                }
-            }
+                int[] result = { 0, 0 };
+                string name_control = "";
+                string name_window = "";
+                int[] offset_win_struct = { 0x1c, 0x18, 0x8, 0x8C };
+                int address_win_struct = ReadInt(oph, Offsets.BaseAdress, offset_win_struct);
+                int windowstruct_adress = 0;
 
-            int temp_address = CalcInt32Value(oph, windowstruct_adress + 0x1cc);
-            for (int k = 0; k < 50; k++)
-            {
-                int window_address = CalcInt32Value(oph, temp_address + 0x4);
-                for (int j = 0; j < k; j++)
+                for (int k = 0; k < 1000; k++)
                 {
-                    window_address = CalcInt32Value(oph, window_address + 0x4);
+                    int window_address = CalcInt32Value(oph, address_win_struct + 0x0);
+                    for (int j = 0; j < k; j++)
+                    {
+                        window_address = CalcInt32Value(oph, window_address + 0x0);
+                    }
+                    windowstruct_adress = CalcInt32Value(oph, window_address + 0x8);
+                    window_address = CalcInt32Value(oph, windowstruct_adress + 0x4c);
+                    name_window = CalcStringValue_ASCII(oph, window_address + 0x0);
+                    if (name_window.IndexOf(window_name) != -1)
+                    {
+                        result[0] = windowstruct_adress;
+                        break;
+                    }
                 }
-                int controlstruct_address = CalcInt32Value(oph, window_address + 0x8);
-                window_address = CalcInt32Value(oph, controlstruct_address + 0x18);
-                name_control = CalcStringValue_ASCII(oph, window_address + 0x0);
-                if (name_control.IndexOf(control_name) != -1)
+
+                int temp_address = CalcInt32Value(oph, windowstruct_adress + 0x1cc);
+                for (int k = 0; k < 50; k++)
                 {
-                    int address_to_command_control = CalcInt32Value(oph, controlstruct_address + 0x1c);
-                    result[1] = address_to_command_control;
-                    return result;
+                    int window_address = CalcInt32Value(oph, temp_address + 0x4);
+                    for (int j = 0; j < k; j++)
+                    {
+                        window_address = CalcInt32Value(oph, window_address + 0x4);
+                    }
+                    int controlstruct_address = CalcInt32Value(oph, window_address + 0x8);
+                    window_address = CalcInt32Value(oph, controlstruct_address + 0x18);
+                    name_control = CalcStringValue_ASCII(oph, window_address + 0x0);
+                    if (name_control.IndexOf(control_name) != -1)
+                    {
+                        int address_to_command_control = CalcInt32Value(oph, controlstruct_address + 0x1c);
+                        result[1] = address_to_command_control;
+                        return result;
+                    }
                 }
+                return result;
             }
-            return result;
+            catch (Exception ex)
+            {
+                throw ex;
+            }
         }
 
         /// <summary>
@@ -358,19 +386,26 @@ namespace Nirvana
         /// <returns></returns>
         public static bool SearchPlayerNearby(IntPtr oph, int wid)
         {
-            //считаем количество народа вокруг
-            int player_count = ReadInt(oph, Offsets.BaseAdress, Offsets.OffsetsPlayersCount);
-            for (int i = 0; i < player_count; i++)
+            try
             {
-                //считываем wid каждого
-                int player_wid = ReadInt(oph, Offsets.BaseAdress, Offsets.OffsetsWidPlayer(i));
-                //если найден нужный wid, выходим и возвращаем true
-                if (player_wid == wid)
+                //считаем количество народа вокруг
+                int player_count = ReadInt(oph, Offsets.BaseAdress, Offsets.OffsetsPlayersCount);
+                for (int i = 0; i < player_count; i++)
                 {
-                    return true;
+                    //считываем wid каждого
+                    int player_wid = ReadInt(oph, Offsets.BaseAdress, Offsets.OffsetsWidPlayer(i));
+                    //если найден нужный wid, выходим и возвращаем true
+                    if (player_wid == wid)
+                    {
+                        return true;
+                    }
                 }
+                return false;
             }
-            return false;
+            catch (Exception ex)
+            {
+                throw ex;
+            }
         }
 
         /// <summary>
@@ -381,19 +416,26 @@ namespace Nirvana
         /// <returns></returns>
         public static int TargetPlayerWid(IntPtr oph, uint wid)
         {
-            //считаем количество народа вокруг
-            int player_count = ReadInt(oph, Offsets.BaseAdress, Offsets.OffsetsPlayersCount);
-            for (int i = 0; i < player_count; i++)
+            try
             {
-                //считываем wid каждого
-                int player_wid = ReadInt(oph, Offsets.BaseAdress, Offsets.OffsetsWidPlayer(i));
-                //если найден нужный wid, выходим и возвращаем true
-                if (player_wid == wid)
+                //считаем количество народа вокруг
+                int player_count = ReadInt(oph, Offsets.BaseAdress, Offsets.OffsetsPlayersCount);
+                for (int i = 0; i < player_count; i++)
                 {
-                    return ReadInt(oph, Offsets.BaseAdress, Offsets.OffsetsTargetWidPlayer(i));
+                    //считываем wid каждого
+                    int player_wid = ReadInt(oph, Offsets.BaseAdress, Offsets.OffsetsWidPlayer(i));
+                    //если найден нужный wid, выходим и возвращаем true
+                    if (player_wid == wid)
+                    {
+                        return ReadInt(oph, Offsets.BaseAdress, Offsets.OffsetsTargetWidPlayer(i));
+                    }
                 }
+                return -1;
             }
-            return -1;
+            catch (Exception ex)
+            {
+                throw ex;
+            }           
         }
     }
 }
