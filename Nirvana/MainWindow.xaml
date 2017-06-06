@@ -12,7 +12,7 @@
         Left="{Binding Source={x:Static p:Settings.Default}, Path=Left, Mode=TwoWay}"
         Height="{Binding Source={x:Static p:Settings.Default}, Path=Height, Mode=TwoWay}"
         
-        Title="НирванаБот" Width="640" ResizeMode="NoResize" AllowsTransparency="True" WindowStyle="None" Icon="258211.ico" Closing="Window_Closing" ShowInTaskbar="False" StateChanged="Window_StateChanged" Topmost="True" MouseLeftButtonDown="Window_MouseLeftButtonDown" >
+        Title="НирванаБот" Width="640" ResizeMode="NoResize" AllowsTransparency="True" WindowStyle="None" Icon="258211.ico" Closing="Window_Closing" ShowInTaskbar="False" StateChanged="Window_StateChanged" MouseLeftButtonDown="Window_MouseLeftButtonDown" >
     <Window.Foreground>
         <SolidColorBrush Color="White"/>
     </Window.Foreground>
