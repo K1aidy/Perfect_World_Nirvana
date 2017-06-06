@@ -49,7 +49,7 @@ namespace Nirvana.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("430")]
+        [global::System.Configuration.DefaultSettingValueAttribute("390")]
         public double Height {
             get {
                 return ((double)(this["Height"]));

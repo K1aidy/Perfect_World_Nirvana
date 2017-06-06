@@ -31,7 +31,7 @@ namespace Nirvana
                 0xFF, 0xD0,                     //Call_EAX
                 0x61,                           //Popad
                 0xC3                            //Ret
-            };
+                };
 
                 // ---- заменяем указанные эелементы пакета адресом для GUI инжектирования
                 Buffer.BlockCopy(BitConverter.GetBytes(Offsets.GuiAdress), 0, gui_packet, 12, 4);
@@ -85,7 +85,7 @@ namespace Nirvana
                 0x8B, 0x00,                                 //mox eax, dword ptr [eax]
                 0x8B, 0x40, 0x1c,                           //mov eax, dword ptr[eax + 1C]
                 0x8B, 0x78, 0x34,                           //mov edi, dword ptr[eax + 0x34]
-                0x8B, 0x8F, 0x4C, 0x15, 0x00, 0x00,         //mov ecx, dword ptr[edi + 0x154C]
+                0x8B, 0x8F, 0xC4, 0x15, 0x00, 0x00,         //mov ecx, dword ptr[edi + 0x154C]
                 0x6A, 0x01,                                 //push 1
                 0xB8, /*23*/0x00, 0x00, 0x00, 0x00,         //mov eax, action_1
                 0xFF, 0xD0,                                 //call eax
@@ -96,7 +96,7 @@ namespace Nirvana
                 0x8B, 0xCB,                                 //mov ecx, ebx
                 0xB8, /*44*/0x00, 0x00, 0x00, 0x00,         //mov eax, action_2
                 0xFF, 0xD0,                                 //call eax
-                0x8B, 0x8F, 0x4C, 0x15, 0x00, 0x00,         //mov ecx, dword ptr [edi + 0x154C]
+                0x8B, 0x8F, 0xC4, 0x15, 0x00, 0x00,         //mov ecx, dword ptr [edi + 0x154C]
                 0xB8, /*57*/0x00, 0x00, 0x00, 0x00,         //mov eax, x
                 0x89, 0x43, 0x20,                           //mov dword ptr[ebx + 0x20], eax
                 0xB8, /*65*/0x00, 0x00, 0x00, 0x00,         //mov eax, z
@@ -164,7 +164,7 @@ namespace Nirvana
                  0x6A, 0xFF,                           //push -1
                  0x6A, 0x00,                           //push 0
                  0x6A, 0x00,                           //push 0
-                 0x68, 0x00, 0x00, 0x00, 0x00,         //pusk skill_id
+                 0x68, 0x00, 0x00, 0x00, 0x00,         //push skill_id
                  0x8B, 0x0D, 0x00, 0x00, 0x00, 0x00,   //mov ecx, dword ptr [BA]
                  0x8B, 0x89, 0x00, 0x00, 0x00, 0x00,   //mov ecx, dword ptr [ecx + 0x1C]
                  0x8B, 0x89, 0x00, 0x00, 0x00, 0x00,   //mov ecx, dword ptr [ecx + 0x34]
@@ -172,7 +172,7 @@ namespace Nirvana
                  0xFF, 0xD0,                           //call P1
                  0x61,                                 //popad
                  0xC3                                  //ret
-            };
+                };
 
                 // ---- заменяем указанные эелементы пакета на ID скилла
                 Buffer.BlockCopy(BitConverter.GetBytes(skill_id), 0, skill_packet, 8, 4);

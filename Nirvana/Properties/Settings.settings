@@ -9,7 +9,7 @@
       <Value Profile="(Default)">0</Value>
     </Setting>
     <Setting Name="Height" Type="System.Double" Scope="User">
-      <Value Profile="(Default)">430</Value>
+      <Value Profile="(Default)">390</Value>
     </Setting>
     <Setting Name="log_open" Type="System.Boolean" Scope="User">
       <Value Profile="(Default)">False</Value>

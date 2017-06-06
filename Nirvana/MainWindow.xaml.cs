@@ -60,6 +60,29 @@ namespace Nirvana
             //устанавливаем чекбоксы как в сохраненном файле
             ApplySettings();
         }
+        /// <summary>
+        /// Метод для быстрого дебага функционала
+        /// </summary>
+        void Test()
+        {
+            Int32 processID;
+            IntPtr hwnd = IntPtr.Zero;
+            while (true)
+            {
+                //очищаем коллекцию клиентов и начинаем заполнять заново
+                //получаем следующее окно с классом ElementClient Window. 
+                hwnd = WinApi.FindWindowEx(IntPtr.Zero, hwnd, "ElementClient Window", null);
+                //Если наткнулись на ноль - значит выходим 
+                if (hwnd == IntPtr.Zero) break;
+                WinApi.GetWindowThreadProcessId(hwnd, out processID);
+                //запускаем процесс и получаем его дескриптор
+                IntPtr oph = WinApi.OpenProcess(WinApi.ProcessAccessFlags.All, false, processID);
+                if (oph != IntPtr.Zero)
+                    Injects.Skill_Inject(254, oph);
+            }
+            
+            
+        }
 
         /// <summary>
         /// Обработчик события для логирования, принимает сообщение в качестве аргумента
@@ -1259,10 +1282,10 @@ namespace Nirvana
 
         private void test_btn_Click(object sender, RoutedEventArgs e)
         {
-            if (this.Height>430)
-                this.Height = 430;
+            if (this.Height>390)
+                this.Height = 390;
             else
-                this.Height = 630;     
+                this.Height = 590;     
         } 
 
         private void OpenOffsets()
@@ -1329,6 +1352,15 @@ namespace Nirvana
             this.Hide();
         }
 
+        private void hide_btn_Click(object sender, RoutedEventArgs e)
+        {
+            this.Hide();
+        }
+
+        private void Window_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
+        {
+            this.DragMove();
+        }
     }
 
     

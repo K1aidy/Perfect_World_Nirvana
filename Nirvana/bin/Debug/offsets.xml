@@ -1,31 +1,31 @@
 <?xml version="1.0"?>
 <Offset xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
-  <baseAdress>15726084</baseAdress>
-  <gameAdress>15728044</gameAdress>
-  <guiAdress>11432384</guiAdress>
-  <sendPacket>8889856</sendPacket>
-  <useSkill>4966240</useSkill>
-  <action_1>5043152</action_1>
-  <action_2>5069136</action_2>
-  <action_3>5044704</action_3>
-  <inviteCount>15785876</inviteCount>
-  <inviteStruct>15785864</inviteStruct>
-  <сhatStart>15755112</сhatStart>
-  <сhatNumber>15755124</сhatNumber>
+  <baseAdress>14990000</baseAdress>
+  <gameAdress>14992476</gameAdress>
+  <guiAdress>10359808</guiAdress>
+  <sendPacket>8313648</sendPacket>
+  <useSkill>5113760</useSkill>
+  <action_1>5121232</action_1>
+  <action_2>5143696</action_2>
+  <action_3>5125616</action_3>
+  <inviteCount>15057108</inviteCount>
+  <inviteStruct>15057096</inviteStruct>
+  <сhatStart>15027704</сhatStart>
+  <сhatNumber>15027716</сhatNumber>
   <inviteWidPlayer>16</inviteWidPlayer>
   <inviteWidParty>20</inviteWidParty>
   <offsetToGameAdress>28</offsetToGameAdress>
   <offsetToPersStruct>52</offsetToPersStruct>
-  <offsetToParty>2000</offsetToParty>
+  <offsetToParty>2080</offsetToParty>
   <offsetToCountParty>24</offsetToCountParty>
-  <offsetToName>1792</offsetToName>
-  <offsetToClassID>1796</offsetToClassID>
+  <offsetToName>1872</offsetToName>
+  <offsetToClassID>1876</offsetToClassID>
   <offsetToMiningState>648</offsetToMiningState>
   <offsetToWidWin_QuickAction>244</offsetToWidWin_QuickAction>
   <offsetToX>60</offsetToX>
   <offsetToY>68</offsetToY>
   <offsetToZ>64</offsetToZ>
-  <offsetToWalkMode>1808</offsetToWalkMode>
+  <offsetToWalkMode>1888</offsetToWalkMode>
   <offsetToWid>1208</offsetToWid>
   <offsetToTargetWid>1444</offsetToTargetWid>
   <offsetToStructParty>20</offsetToStructParty>
@@ -36,9 +36,9 @@
     <int>4</int>
     <int>0</int>
   </offsetsLocationName>
-  <offsetToSkillsCount>5500</offsetToSkillsCount>
-  <offsetToSkillsArray>5496</offsetToSkillsArray>
-  <offsetToCurrentSkill>2028</offsetToCurrentSkill>
+  <offsetToSkillsCount>5620</offsetToSkillsCount>
+  <offsetToSkillsArray>5616</offsetToSkillsArray>
+  <offsetToCurrentSkill>2108</offsetToCurrentSkill>
   <offsetToIdSkill>8</offsetToIdSkill>
   <offsetToCdSkill>16</offsetToCdSkill>
   <offsetToCountBufs>920</offsetToCountBufs>
