@@ -18,6 +18,8 @@ namespace Nirvana
         public int guiAdress;// = 0x00AE71C0;
         //адрес для отправки пакетов
         public int sendPacket;// = 0x0087A600;
+        //адрес для инжекта автоатаки
+        public int autoAttack;
         //адрес для инжекта скиллов
         public int useSkill;// = 0x4BC760;
         //адреса для инжекта движения
@@ -107,5 +109,21 @@ namespace Nirvana
         public int msg_form2;// = 0x8;
         //смещение к WID сообщения
         public int msgWid;// = 0x20;
+        //смещение к структуре инвентаря
+        public int invent_struct;// = 0x1160
+        //смещение к началу списка ячеек
+        public int invent_struct_2;// = 0xC
+        //смещение до счетчика количества ячеек в инвентаре
+        public int cellsCount;// = 0x14
+        //смещение до типа предмета в ячейке
+        public int itemInCellType;// = 0x8
+        //смещение до id предмета в ячейке
+        public int itemInCellID;// = 0xC
+        //смещение до количества предметов в ячейке
+        public int itemInCellCount;// = 0x10
+        //смещение до цены предмета в ячейке
+        public int itemInCellPrice;// = 0x1C
+        //смещение до имени предмета в ячейке
+        public int itemInCellName;// = 0x40
     }
 }

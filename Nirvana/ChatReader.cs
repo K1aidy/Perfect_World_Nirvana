@@ -96,7 +96,7 @@ namespace Nirvana
         /// <summary>
         /// Метод для чтения сообщений в чате пересборщиком
         /// </summary>
-        public void ReadChat()
+        public async void ReadChat()
         {
             //узнаем начало чата
             int ChS = CalcMethods.CalcInt32Value(oph, Offsets.СhatStart);
@@ -160,6 +160,44 @@ namespace Nirvana
 
                     #endregion
 
+                    #region Физнирка
+                    try
+                    {
+                        //реакция на команду "пересбор"
+                        if (messages[j].Msg_2.IndexOf(MainWindow.settings.Pechat) != -1 && messages[j].Type == 4 && messages[j].Wid == ListClients.work_collection[0].Wid && temp)
+                        {
+                            //mw.Logging(new FormatText(mw.Name, Brushes.Red, 14, 2), new FormatText(message_1, Brushes.Black, 13, 2));
+                            ////все боты выходят из пати (если они в пати)
+                            //SimonSayMethods.QuitFromParty();
+                            ////пересборщик кидает всем ботам пати
+                            //SimonSayMethods.InvitetoParty();
+                            ////все боты принимают пати
+                            //SimonSayMethods.AcceptInviteToParty();
+                            ////пересборщик отдает патилидера первому боту
+                            //SimonSayMethods.ChangePl();
+                            ////пересборщик кидает всем призыв по очереди и боты его принимают
+                            ////проверки на класс у пересборщика нет, если пересборщик по каким-то причинам
+                            ////не может кинуть призыв, то ничего не происходит
+                            ////все боты, кроме пересборщика заходят в нирвану
+                            //SimonSayMethods.CallShaman(mw.ShamansCall);
+                            //mw.PacketSend.leaveParty();
+                            //SimonSayMethods.Rebuf(MainWindow.settings.Rebaf);
+                            ////дадим время ботам на ребаф
+                            //Thread.Sleep(5000);
+                            ////проверяем всех ботов на наличие самоцвета и берем квест на открытие
+                            //SimonSayMethods.OpenFizNirvana();
+                            //убиваем первого босса
+                            KillBoss.KillBossForAll(1);
+                            Thread.Sleep(100);
+                        }
+                    }
+                    catch (Exception ex)
+                    {
+                        mw.Logging(new FormatText(ex.Message, Brushes.Red, 20, 1));
+                    }
+
+                    #endregion
+
                     #region Пати и пл
                     try
                     {
@@ -212,7 +250,7 @@ namespace Nirvana
                                         packet.selectNpc(target_wid);
                                         Thread.Sleep(300);
                                         //запишем в структуру окна wid пла
-                                        int[] result = CalcMethods.CalcWindowAddress(oph, "Win_QuickAction", "Follow");
+                                        int[] result = CalcMethods.CalcControlAddress(oph, "Win_QuickAction", "Follow", 1);
                                         CalcMethods.WriteProcessBytes(oph, target_wid, result[0] + Offsets.OffsetToWidWin_QuickAction);
                                         SimonSayMethods.FollowMe(result, oph);
                                     }
@@ -349,7 +387,7 @@ namespace Nirvana
                                         packet.selectNpc(target_wid);
                                         Thread.Sleep(300);
                                         //запишем в структуру окна wid пла
-                                        int[] result = CalcMethods.CalcWindowAddress(oph, "Win_QuickAction", "Follow");
+                                        int[] result = CalcMethods.CalcControlAddress(oph, "Win_QuickAction", "Follow", 1);
                                         CalcMethods.WriteProcessBytes(oph, target_wid, result[0] + Offsets.OffsetToWidWin_QuickAction);
                                         SimonSayMethods.FollowMe(result, oph);
                                     }

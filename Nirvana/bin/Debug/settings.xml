@@ -4,8 +4,8 @@
   <Peresbor_v_nirku>пб в нирку</Peresbor_v_nirku>
   <Rebaf>ребаф</Rebaf>
   <Peresbor>пб</Peresbor>
-  <Pechat />
-  <To_him>следовать</To_him>
+  <Pechat>физнирка</Pechat>
+  <To_him>го</To_him>
   <Checkbox_set>
     <ArrayOfBoolean>
       <boolean>false</boolean>
@@ -15,54 +15,57 @@
     <ArrayOfBoolean>
       <boolean>true</boolean>
       <boolean>true</boolean>
-      <boolean>false</boolean>
+      <boolean>true</boolean>
     </ArrayOfBoolean>
     <ArrayOfBoolean>
       <boolean>true</boolean>
       <boolean>true</boolean>
-      <boolean>false</boolean>
+      <boolean>true</boolean>
     </ArrayOfBoolean>
     <ArrayOfBoolean>
       <boolean>true</boolean>
       <boolean>true</boolean>
-      <boolean>false</boolean>
+      <boolean>true</boolean>
     </ArrayOfBoolean>
     <ArrayOfBoolean>
       <boolean>true</boolean>
       <boolean>true</boolean>
-      <boolean>false</boolean>
+      <boolean>true</boolean>
     </ArrayOfBoolean>
     <ArrayOfBoolean>
       <boolean>true</boolean>
       <boolean>true</boolean>
-      <boolean>false</boolean>
+      <boolean>true</boolean>
     </ArrayOfBoolean>
     <ArrayOfBoolean>
       <boolean>true</boolean>
       <boolean>true</boolean>
-      <boolean>false</boolean>
+      <boolean>true</boolean>
     </ArrayOfBoolean>
     <ArrayOfBoolean>
       <boolean>true</boolean>
       <boolean>true</boolean>
-      <boolean>false</boolean>
+      <boolean>true</boolean>
     </ArrayOfBoolean>
     <ArrayOfBoolean>
       <boolean>true</boolean>
       <boolean>true</boolean>
-      <boolean>false</boolean>
+      <boolean>true</boolean>
     </ArrayOfBoolean>
     <ArrayOfBoolean>
       <boolean>true</boolean>
       <boolean>true</boolean>
-      <boolean>false</boolean>
+      <boolean>true</boolean>
     </ArrayOfBoolean>
     <ArrayOfBoolean>
       <boolean>true</boolean>
       <boolean>true</boolean>
-      <boolean>false</boolean>
+      <boolean>true</boolean>
     </ArrayOfBoolean>
   </Checkbox_set>
   <Stop>стоп</Stop>
   <ChangePl>true</ChangePl>
+  <Downloader>Downloader/12650 MailRuGameCenter/1265</Downloader>
+  <UserId_1>65745518762333034221</UserId_1>
+  <UserId_2>65745518762333034221</UserId_2>
 </MySettings>

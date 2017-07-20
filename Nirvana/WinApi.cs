@@ -396,6 +396,9 @@ namespace Nirvana
               int wParam,  // first message parameter
               string lParam   // second message parameter
               );
+        [DllImport("user32.dll", CharSet = CharSet.Auto)]
+        public static extern bool SendMessage(IntPtr hWnd, int Msg, char wParam, int lParam);
+
         [Flags]
         public enum Msg
         {

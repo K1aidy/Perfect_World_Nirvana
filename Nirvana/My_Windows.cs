@@ -38,6 +38,7 @@ namespace Nirvana
         /// </summary>
         public static ObservableCollection<My_Windows> my_windows_selecting_temp =
             new ObservableCollection<My_Windows>();
+
         private static List<int> skills_for_buf = new List<int> {
             #region мист
             #endregion

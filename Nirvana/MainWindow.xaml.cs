@@ -19,7 +19,8 @@ using System.Xml.Serialization;
 using Hardcodet.Wpf.TaskbarNotification;
 using System.Text.RegularExpressions;
 using System.Collections.ObjectModel;
-//https://www.youtube.com/watch?v=V2A8tcb_YyY&list=PLS1QulWo1RIZrmdggzEKbhnfvCMHtT-sA
+using System.Net;
+
 namespace Nirvana
 {
 
@@ -34,14 +35,19 @@ namespace Nirvana
         public static RichTextBox loging_box;
         XmlSerializer formatter;
         XmlSerializer formatter_for_offsets;
+        XmlSerializer formatter_for_pass;
         public static MySettings settings;
         public Offset ofset;
         public object thread_object;
         MyBalloon mb;
+        AddAccount addAccounWindow;
+        LoginSettings loginSetWondow;
+        GetSmsCode windowGetSms;
 
         public MainWindow()
         {
             InitializeComponent();
+            
             mb = new MyBalloon(tbi.GetPopupTrayPosition().X, tbi.GetPopupTrayPosition().Y);
             
             mb.baloon_panel.ItemsSource = FormatText.baloon_msg;
@@ -55,10 +61,14 @@ namespace Nirvana
             //определяем тип для сериализатора
             formatter_for_offsets = new XmlSerializer(typeof(Offset));
             formatter = new XmlSerializer(typeof(MySettings));
+            formatter_for_pass = new XmlSerializer(typeof(ObservableCollection<Account>));
             //загружаем данные из xml при открытии приложения
             Deserializable();
+            listAccount.ItemsSource = Collection.accounts;
+            //this.DataContext = new ViewModels.HeadViewModel();
             //устанавливаем чекбоксы как в сохраненном файле
             ApplySettings();
+            //Test();
         }
         /// <summary>
         /// Метод для быстрого дебага функционала
@@ -77,11 +87,12 @@ namespace Nirvana
                 WinApi.GetWindowThreadProcessId(hwnd, out processID);
                 //запускаем процесс и получаем его дескриптор
                 IntPtr oph = WinApi.OpenProcess(WinApi.ProcessAccessFlags.All, false, processID);
+                //Int32[] temp_mas;
                 if (oph != IntPtr.Zero)
-                    Injects.Skill_Inject(254, oph);
+                {
+
+                }
             }
-            
-            
         }
 
         /// <summary>
@@ -138,6 +149,7 @@ namespace Nirvana
             if (FormatText.Timer_1_State())
                 FormatText.Stop();
             tbi.Dispose();
+            this.Width = 640;
             Nirvana.Properties.Settings.Default.Save();
             base.OnClosing(e);
         }
@@ -954,7 +966,7 @@ namespace Nirvana
                 }
 
             }
-            #region Заполнение полей с коммандами зи настроек
+            #region Заполнение полей с коммандами из настроек
             peresbor_v_nirku.Text = settings.Peresbor_v_nirku;
             party_and_pl.Text = settings.Party_and_pl;
             rebaf.Text = settings.Rebaf;
@@ -962,6 +974,14 @@ namespace Nirvana
             to_him.Text = settings.To_him;
             pechat.Text = settings.Pechat;
             stop.Text = settings.Stop;
+            #endregion
+            #region Заполнение настроек для входа в игру
+            Loging.Downloader = settings.Downloader;
+            Loging.UserId_1 = (settings.UserId_1 != String.Empty && settings.UserId_1.Length > 18) ? settings.UserId_1 : CalcMethods.RandomStringValue(20);
+            settings.UserId_1 = Loging.UserId_1;
+            Loging.UserId_2 = (settings.UserId_2 != String.Empty && settings.UserId_2.Length > 18) ? settings.UserId_2 : CalcMethods.RandomStringValue(20);
+            settings.UserId_2 = Loging.UserId_2;
+            Serializable();
             #endregion
 
             OpenOffsets();
@@ -971,6 +991,7 @@ namespace Nirvana
         {
             FileStream fs = new FileStream("settings.xml", FileMode.OpenOrCreate);
             FileStream fs_2 = new FileStream("offsets.xml", FileMode.OpenOrCreate);
+            FileStream fs_3 = new FileStream("password.xml", FileMode.OpenOrCreate);
             try
             {
                 settings = (MySettings)formatter.Deserialize(fs);
@@ -987,6 +1008,20 @@ namespace Nirvana
                 if (fs_2 != null)
                     fs_2.Close();
             }
+            try
+            {
+                Collection.accounts = (ObservableCollection<Account>)formatter_for_pass.Deserialize(fs_3);
+               //var temp_temp = formatter.Deserialize(fs_3);
+            }
+            catch
+            {
+                MessageBox.Show("Пока не сохранено ни одного пароля.");
+            }
+            finally
+            {
+                if (fs_3 != null)
+                    fs_3.Close();
+            }
         }
 
         private void Serializable()
@@ -999,6 +1034,11 @@ namespace Nirvana
             using (FileStream fs = new FileStream(Environment.CurrentDirectory + "\\offsets.xml", FileMode.OpenOrCreate))
             {
                 formatter_for_offsets.Serialize(fs, ofset);
+                fs.Close();
+            }
+            using (FileStream fs = new FileStream(Environment.CurrentDirectory + "\\password.xml", FileMode.Truncate))
+            {
+                formatter_for_pass.Serialize(fs, Collection.accounts);
                 fs.Close();
             }
         }
@@ -1294,6 +1334,7 @@ namespace Nirvana
             Offsets.GameAdress = ofset.gameAdress;
             Offsets.GuiAdress = ofset.guiAdress;
             Offsets.SendPacket = ofset.sendPacket;
+            Offsets.AutoAttack = ofset.autoAttack;
             Offsets.UseSkill = ofset.useSkill;
             Offsets.Action_1 = ofset.action_1;
             Offsets.Action_2 = ofset.action_2;
@@ -1341,6 +1382,14 @@ namespace Nirvana
             Offsets.Msg_form1 = ofset.msg_form1;
             Offsets.Msg_form2 = ofset.msg_form2;
             Offsets.MsgWid = ofset.msgWid;
+            Offsets.Invent_struct = ofset.invent_struct;
+            Offsets.Invent_struct_2 = ofset.invent_struct_2;
+            Offsets.CellsCount = ofset.cellsCount;
+            Offsets.ItemInCellCount = ofset.itemInCellCount;
+            Offsets.ItemInCellID = ofset.itemInCellID;
+            Offsets.ItemInCellName = ofset.itemInCellName;
+            Offsets.ItemInCellPrice = ofset.itemInCellPrice;
+            Offsets.ItemInCellType = ofset.itemInCellType;
             //определяем цепочки смещений
             Offsets.RefreshOffsets();
         }
@@ -1360,6 +1409,76 @@ namespace Nirvana
         private void Window_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
         {
             this.DragMove();
+        }
+
+        private void loging_btn_Click(object sender, RoutedEventArgs e)
+        {
+            if (grid_loging.Visibility == Visibility.Hidden)
+            {
+                for (Int32 i = 0; i < 24; i++)
+                {
+                    this.Width = this.Width + 10;
+                    if (this.Left > 0)
+                        this.Left = this.Left - 10;
+                }
+                grid_loging.Visibility = Visibility.Visible;
+            }
+            else
+            {
+                for (Int32 i = 0; i < 24; i++)
+                {
+                    this.Width = this.Width - 10;
+                    this.Left = this.Left + 10;
+                }
+                grid_loging.Visibility = Visibility.Hidden;
+            }
+            
+        }
+
+        private void Button_Click_1(object sender, RoutedEventArgs e)
+        {
+            if (listAccount.SelectedItem != null)
+            {
+                Collection.accounts.Remove((Account)(listAccount.SelectedItem));
+            }
+        }
+
+        private void Button_Click_2(object sender, RoutedEventArgs e)
+        {
+            if (addAccounWindow == null)
+            {
+                addAccounWindow = new AddAccount();
+                addAccounWindow.Owner = this;
+            }
+            addAccounWindow.ShowDialog();
+        }
+
+        private void Button_Click_3(object sender, RoutedEventArgs e)
+        {
+            if (loginSetWondow == null)
+            {
+                loginSetWondow = new LoginSettings();
+                loginSetWondow.Owner = this;
+            }
+            loginSetWondow.ShowDialog();
+        }
+
+        private void Button_Click_4(object sender, RoutedEventArgs e)
+        {
+            if (listAccount.SelectedItem != null)
+            {
+               Loging.AuthAsync((Account)(listAccount.SelectedItem), this);
+            }
+        }
+
+        public void ShowQuestions()
+        {
+            if (windowGetSms == null)
+            {
+                windowGetSms = new GetSmsCode();
+                windowGetSms.Owner = this;
+            }
+            windowGetSms.ShowDialog();
         }
     }
 

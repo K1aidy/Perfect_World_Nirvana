@@ -345,36 +345,37 @@ namespace Nirvana
                                     Offsets.BaseAdress, Offsets.OffsetsLocationName);
                             }
                             Thread.Sleep(1000);
-                            int mob_wid = CalcMethods.MobSearch(ListClients.work_collection[i].Oph, "Страж Зала Перерождения");
-                            if (mob_wid != 0)
-                            {
-                                //Выделяем НПСа
-                                ListClients.work_collection[i].PacketSend.selectNpc(mob_wid);
-                                Thread.Sleep(300);
-                                //Открываем диалоговое окно с НПСом
-                                ListClients.work_collection[i].PacketSend.talkToNpc(mob_wid);
-                                Thread.Sleep(1000);
-                                //Узнаем необходимые данные об окне, так как после взятия кв оно перестанет быть активным
-                                int[] adress_window = CalcMethods.CalcControlAddress(ListClients.work_collection[i].Oph);
-                                Thread.Sleep(300);
-                                //Берем кв на заход в нирвану (id взято отсюда http://www.pwdatabase.com/ru/quest/20790 )
-                                ListClients.work_collection[i].PacketSend.takeQuest(20790);
-                                //если адреса считались нормально, то закрываем диалоговое окно с НПСом
-                                int adressActiveWindow = CalcMethods.CalcAddressActiveWindow(ListClients.work_collection[i].Oph);
-                                if (adress_window[0] != 0 && adress_window[1] != 0 &&
-                                    adress_window[0] == adressActiveWindow)
-                                    Injects.GUI_Inject(adress_window[0], adress_window[1], ListClients.work_collection[i].Oph);
-                                else
-                                {
-                                    ListClients.work_collection[i].Logging(new FormatText(ListClients.work_collection[i].Name, Brushes.Red, 14, 1),
-                                                                           new FormatText("не смог закрыть окно", Brushes.Red, 14, 1));
-                                }
+                            //бот берет квест на заход в нирвану (id взято отсюда http://www.pwdatabase.com/ru/quest/20790 )
+                            TalkToNPC(ListClients.work_collection[i], "Страж Зала Перерождения", 20790);
 
-
-                            }
+                            #region старый кусок кода
+                            //Int32 mob_wid = CalcMethods.MobSearch(ListClients.work_collection[i].Oph, "Страж Зала Перерождения");
+                            //if (mob_wid != 0)
+                            //{
+                            //    //Выделяем НПСа
+                            //    ListClients.work_collection[i].PacketSend.selectNpc(mob_wid);
+                            //    Thread.Sleep(300);
+                            //    //Открываем диалоговое окно с НПСом
+                            //    ListClients.work_collection[i].PacketSend.talkToNpc(mob_wid);
+                            //    Thread.Sleep(1000);
+                            //    //Узнаем необходимые данные об окне, так как после взятия кв оно перестанет быть активным
+                            //    int[] adress_window = CalcMethods.CalcControlAddress(ListClients.work_collection[i].Oph, "Win_NPC", "Btn_Back", 1);
+                            //    Thread.Sleep(300);
+                            //    //Берем кв на заход в нирвану (id взято отсюда http://www.pwdatabase.com/ru/quest/20790 )
+                            //    ListClients.work_collection[i].PacketSend.takeQuest(20790);
+                            //    //если адреса считались нормально, то закрываем диалоговое окно с НПСом
+                            //    if (adress_window[0] != 0 && adress_window[1] != 0)
+                            //        Injects.GUI_Inject(adress_window[0], adress_window[1], ListClients.work_collection[i].Oph);
+                            //    else
+                            //    {
+                            //        ListClients.work_collection[i].Logging(new FormatText(ListClients.work_collection[i].Name, Brushes.Red, 14, 1),
+                            //                                               new FormatText("не смог закрыть окно", Brushes.Red, 14, 1));
+                            //    } 
+                            //}
+                            #endregion
                         }
                         //ждем отката призыва
-                        Thread.Sleep(3000);
+                        //Thread.Sleep(3000);
                         int cd_call = CalcMethods.ReadInt(ListClients.work_collection[0].Oph,
                                                             Offsets.BaseAdress, Offsets.OffsetsToCdSkill(call_skill.Number));
                         while (cd_call > 0)
@@ -394,45 +395,93 @@ namespace Nirvana
         }
 
         /// <summary>
-        /// Боты входят в нирвану, все кроме пересборщика
+        /// Пл, проверяет, есть ли у ботов самоцветы и открывает физнирку
         /// </summary>
-        public static void EnterToNirvana()
+        public static void OpenFizNirvana()
         {
-            try
+            Boolean temp = false;
+            for (int i = 0; i < ListClients.work_collection.Count() - 1; i++)
             {
-                for (int i = 0; i < ListClients.work_collection.Count() - 1; i++)
-                {
-                    if (ListClients.work_collection[i] != null)
-                    {
-                        int mob_wid = CalcMethods.MobSearch(ListClients.work_collection[i].Oph, "Страж Зала Перерождения");
-                        if (mob_wid != 0)
-                        {
-                            //Выделяем НПСа
-                            ListClients.work_collection[i].PacketSend.selectNpc(mob_wid);
-                            Thread.Sleep(300);
-                            //Открываем диалоговое окно с НПСом
-                            ListClients.work_collection[i].PacketSend.talkToNpc(mob_wid);
-                            Thread.Sleep(1000);
-                            //Узнаем необходимые данные об окне, так как после взятия кв оно перестанет быть активным
-                            int[] adress_window = CalcMethods.CalcControlAddress(ListClients.work_collection[i].Oph);
-                            Thread.Sleep(300);
-                            //Берем кв на заход в нирвану (id взято отсюда http://www.pwdatabase.com/ru/quest/20790 )
-                            ListClients.work_collection[i].PacketSend.takeQuest(20790);
-                            Thread.Sleep(5000);
-                            //если адреса считались нормально, то закрываем диалоговое окно с НПСом
-                            if (adress_window[0] != 0 && adress_window[1] != 0)
-                                Injects.GUI_Inject(adress_window[0], adress_window[1], ListClients.work_collection[i].Oph);
-                            Thread.Sleep(300);
-                        }
-                    }
-                }
+                //Thread.Sleep(200);
+                //проверяем, есть ли в инвентаре необходимый предмет
+                if (ListClients.work_collection[i] != null)
+                    temp = ReadInvent(ListClients.work_collection[i].Oph, ListClients.work_collection[i].Handle);
             }
-            catch (Exception ex)
+            Thread.Sleep(1500);
+            //если у всех ботов есть самоцвет, то берем квест
+            if (temp)
             {
-                throw ex;
+                Say(ListClients.work_collection[0], "!!Внимание, беру квест!");
+                TalkToNPC(ListClients.work_collection[0], "Загадочный старец", 20714);
             }
         }
-        
+
+        /// <summary>
+        /// бот открывает диалог с НПС
+        /// </summary>
+        /// <param name="mw"></param>
+        /// <param name="npcName"></param>
+        /// <param name="questId"></param>
+        public static void TalkToNPC(My_Windows mw, String npcName, Int32 questId)
+        {
+            //находим wid НПСа по имени
+            Int32 mob_wid = CalcMethods.MobSearch(mw.Oph, npcName);
+            //если НПС нашелся, то берем у него квест и закрываем диалоговое окно
+            if (mob_wid != 0)
+            {
+                //Выделяем НПСа
+                mw.PacketSend.selectNpc(mob_wid);
+                Thread.Sleep(300);
+
+                //Открываем диалоговое окно с НПСом
+                mw.PacketSend.talkToNpc(mob_wid);
+                Thread.Sleep(1000);
+
+                //Узнаем необходимые данные об окне, так как после взятия кв оно перестанет быть активным
+                int[] adress_window = CalcMethods.CalcControlAddress(mw.Oph, "Win_NPC", "Btn_Back", 1);
+                Thread.Sleep(300);
+
+                //Берем кв
+                mw.PacketSend.takeQuest(questId);
+
+                //если адреса считались нормально, то закрываем диалоговое окно с НПСом
+                if (adress_window[0] != 0 && adress_window[1] != 0)
+                    Injects.GUI_Inject(adress_window[0], adress_window[1], mw.Oph);
+                else
+                {
+                    mw.Logging(new FormatText(mw.Name, Brushes.Red, 14, 1), new FormatText("не смог закрыть окно", Brushes.Red, 14, 1));
+                }
+            }
+        }
+
+        /// <summary>
+        /// Бот просматривает инвентарь на предмет нахождения "Самоцвет зала перерождения" и пишет в чат об этом
+        /// </summary>
+        /// <param name="oph"></param>
+        /// <param name="hwnd"></param>
+        public static Boolean ReadInvent(IntPtr oph, IntPtr hwnd)
+        {
+            Int32 count_cells = CalcMethods.ReadInt(oph, Offsets.BaseAdress, Offsets.OffsetsInventCellsCount);
+            for (Int32 iter = 0; iter < count_cells; iter++)
+            {
+                if (CalcMethods.ReadInt(oph, Offsets.BaseAdress, Offsets.OffsetsItemInCellID(iter)) == 27422) // id самоцвета зала перерождения
+                {
+                    //отправим сообщение в чат
+                    Int32[] address_window_1 = CalcMethods.CalcControlAddress(oph, "Win_Chat", "DEFAULT_Txt_Speech", 2);
+                    Injects.SetText(oph, "!!Самоцвет найден!", address_window_1[2]);
+                    if (address_window_1[0] != 0 && address_window_1[1] != 0)
+                        Injects.GUI_Inject(address_window_1[0], address_window_1[1], oph);
+                    return true;
+                }
+            }
+            //отправим сообщение в чат
+            Int32[] address_window = CalcMethods.CalcControlAddress(oph, "Win_Chat", "DEFAULT_Txt_Speech", 2);
+            Injects.SetText(oph, "!!Самоцвет не найден!", address_window[2]);
+            if (address_window[0] != 0 && address_window[1] != 0)
+                Injects.GUI_Inject(address_window[0], address_window[1], oph);
+            return false;
+        }
+
         /// <summary>
         /// Шаман кидает пати, отдает пл, призывает и выходит из пати
         /// </summary>
@@ -463,8 +512,9 @@ namespace Nirvana
                         if (partyCount > 0)
                         {
                             //если счетчик людей в пати >0, то передаем пл, кидаем призыв и выходим из пати
-                            int[] temp_mas = { 0x1c, 0x34, 0x7d0, 0x14, 0x0, 0xc };
+                            int[] temp_mas = { 0x1c, 0x34, 0x820, 0x14, 0x0, 0xc };
                             //если пересборщик - пл, то передаем пл 
+                            Int32 temp_int = CalcMethods.ReadInt(oph, Offsets.BaseAdress, temp_mas);
                             if (CalcMethods.ReadInt(oph, Offsets.BaseAdress, temp_mas)
                                 == ListClients.work_collection[ListClients.work_collection.Count() - 1].Wid)
                             {
@@ -485,6 +535,30 @@ namespace Nirvana
             {
                 throw ex;
             }
+        }
+
+        /// <summary>
+        /// Пл ребафает пати и пишет в чат остальным ботам "ребаф"
+        /// </summary>
+        public static void Rebuf(String text)
+        {
+            UseSkillMassive(ListClients.work_collection[0].My_skills_for_buf, ListClients.work_collection[0].Oph);
+            Say(ListClients.work_collection[0], "!!" + text);
+        }
+
+        /// <summary>
+        /// Бот пишет в чат заданный текст
+        /// </summary>
+        /// <param name="mw"></param>
+        /// <param name="text"></param>
+        public static void Say(My_Windows mw, String text)
+        {
+            //запишем сообщение в чат
+            Int32[] address_window = CalcMethods.CalcControlAddress(mw.Oph, "Win_Chat", "DEFAULT_Txt_Speech", 2);
+            Injects.SetText(mw.Oph, text, address_window[2]);
+            //нажимаем кнопку отправить
+            if (address_window[0] != 0 && address_window[1] != 0)
+                Injects.GUI_Inject(address_window[0], address_window[1], mw.Oph);
         }
 
         /// <summary>
@@ -562,5 +636,52 @@ namespace Nirvana
                 throw ex;
             }
         }
+
+        /// <summary>
+        /// Бот движется по указанному адресу, но не более 60 секунд.
+        /// </summary>
+        /// <param name="oph"></param>
+        /// <param name="x"></param>
+        /// <param name="y"></param>
+        /// <param name="z"></param>
+        public static void MoveTo(IntPtr oph, float x, float y, float z)
+        {
+            try
+            {
+                //узнаем состояние: 0 - земля, 1 - вода, 2 - воздух
+                Int32 walk_mode = CalcMethods.ReadInt(oph, Offsets.BaseAdress, Offsets.OffsetsWalkMode);
+                //юзаем инжект движения
+                Injects.WalkTo(oph, x, y, z, walk_mode);
+                //Расчитываем нынешние коорды персонажа
+                float x_temp = CalcMethods.ReadFloat(oph, Offsets.BaseAdress, Offsets.OffsetsX);
+                float y_temp = CalcMethods.ReadFloat(oph, Offsets.BaseAdress, Offsets.OffsetsY);
+                float z_temp = CalcMethods.ReadFloat(oph, Offsets.BaseAdress, Offsets.OffsetsZ);
+                //в цикле проверяем, достиг ли персонаж цели и не застрял ли он
+                Int32 iter = 0;
+                while (!CalcMethods.GetCoord(oph, x, y, z))
+                {
+                    Thread.Sleep(1000);
+                    //если персонаж встал на месте, то подтолкнем его еще раз
+                    if (CalcMethods.GetCoord(oph, x_temp, y_temp, z_temp))
+                        Injects.WalkTo(oph, x, y, z, walk_mode);
+                    //если персонаж двигается, то перезаписываем его координаты
+                    else
+                    {
+                        x_temp = CalcMethods.ReadFloat(oph, Offsets.BaseAdress, Offsets.OffsetsX);
+                        y_temp = CalcMethods.ReadFloat(oph, Offsets.BaseAdress, Offsets.OffsetsY);
+                        z_temp = CalcMethods.ReadFloat(oph, Offsets.BaseAdress, Offsets.OffsetsZ);
+                    }
+                    iter++;
+                    //если бот бежит дольше минуты, то прекращаем бежать
+                    if (iter > 60)
+                        break;
+                }
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
+
     }
 }

@@ -12,6 +12,48 @@ namespace Nirvana
     class Injects
     {
         /// <summary>
+        /// Инжект автоатаки
+        /// </summary>
+        /// <param name="oph"></param>
+        public static void AutoAtack(IntPtr oph)
+        {
+            try
+            {
+                // ---- Создаем скелет пакета для инжектирования
+                byte[] auto_attack_packet =
+                {
+                0x60,                           //Pushad
+                0xBA, 0x00, 0x00, 0x00, 0x00,   //Mov EDX, address
+                0xFF, 0xD2,                     //Call_EDX
+                0x61,                           //Popad
+                0xC3                            //Ret
+                };
+
+                // ---- заменяем указанные эелементы пакета адресом для GUI инжектирования
+                Buffer.BlockCopy(BitConverter.GetBytes(Offsets.AutoAttack), 0, auto_attack_packet, 2, 4);
+
+                // ---- временные переменные
+                int lpNumberOfBytesWritten = 0;
+                IntPtr lpThreadId;
+                // ---- выделяем место в памяти
+                IntPtr auto_attakc_address = WinApi.VirtualAllocEx(oph, IntPtr.Zero, 10, WinApi.AllocationType.Commit, WinApi.MemoryProtection.ReadWrite);
+                // ---- записываем в выделенную память наш пакет
+                WinApi.WriteProcessMemory(oph, (int)auto_attakc_address, auto_attack_packet, 10, out lpNumberOfBytesWritten);
+                // ---- запускаем записанную в память функцию
+                IntPtr hProcThread = WinApi.CreateRemoteThread(oph, IntPtr.Zero, 0, auto_attakc_address, IntPtr.Zero, 0, out lpThreadId);
+                // ---- Ожидаем завершения функции
+                WinApi.WaitForSingleObject(hProcThread, WinApi.INFINITE);
+                // ---- подчищаем за собой
+                WinApi.VirtualFreeEx(oph, auto_attakc_address, 10, WinApi.FreeType.Release);
+                WinApi.VirtualFreeEx(oph, hProcThread, 10, WinApi.FreeType.Release);
+            }
+            catch(Exception ex)
+            {
+                throw ex;
+            }
+        }
+
+        /// <summary>
         /// Инжект для GUI элементов
         /// </summary>
         /// <param name="win_struct"></param>
@@ -204,6 +246,71 @@ namespace Nirvana
             {
                 throw ex;
             }
+        }
+
+        /// <summary>
+        /// Инжект ввода текста в текстбокс
+        /// </summary>
+        /// <param name="oph"></param>
+        /// <param name="value"></param>
+        /// <param name="address"></param>
+        public static void SetText(IntPtr oph, String value, Int32 address)
+        {
+            try
+            {
+                // ---- формируем наш опкод
+                Byte[] setChatTextOpcode = new Byte[]
+                {
+                0x60,                                   // PUSHAD
+                0xB9, 0x00, 0x00, 0x00, 0x00,           // MOV ECX, {stringPointer}
+                0xBF, 0x00, 0x00, 0x00, 0x00,           // MOV EDI, {chatBoxObjPtr}
+                0x8B, 0x07,                             // MOV EAX, DWORD PTR DS:[EDI]
+                0x51,                                   // PUSH ECX
+                0x8B, 0xCF,                             // MOV ECX,EDI
+                0xFF, 0x50, 0x48,                       // CALL DWORD PTR DS:[EAX+48] это значение может сдвигаться на значение кратное 4 с обновами
+                0x61,                                   // POPAD
+                0xC3                                    // RETN
+                };
+                // ---- освобождаем память под опкод в памяти клиента
+                IntPtr setChatTextOpcodeAddress = WinApi.VirtualAllocEx(oph, IntPtr.Zero, setChatTextOpcode.Length, WinApi.AllocationType.Commit, WinApi.MemoryProtection.ExecuteReadWrite);
+                // ---- записываем опкод в освобожденную память
+                Int32 number_of_bytes_written_3;
+                WinApi.WriteProcessMemory(oph, (Int32)setChatTextOpcodeAddress, setChatTextOpcode, setChatTextOpcode.Length, out number_of_bytes_written_3);
+                // ---- формируем массив данных
+                Byte[] bytes_2 = Encoding.Unicode.GetBytes(value);
+                // ---- выделяем место в памяти клиента
+                IntPtr text_address = WinApi.VirtualAllocEx(oph, IntPtr.Zero, bytes_2.Length, WinApi.AllocationType.Commit, WinApi.MemoryProtection.ExecuteReadWrite);
+                // ---- записываем массив данных в выделенное место
+                Int32 number_of_bytes_written;
+                WinApi.WriteProcessMemory(oph, (Int32)text_address, bytes_2, bytes_2.Length, out number_of_bytes_written);
+                // ---- конвертируем указатель на массив данных в массив байтов
+                Byte[] new_value = BitConverter.GetBytes((Int32)text_address);
+                new_value.Reverse();
+                // ---- записываем указатель на массив данных по адресу опкода + 2
+                Int32 number_of_bytes_written_4;
+                WinApi.WriteProcessMemory(oph, (Int32)setChatTextOpcodeAddress + 2, new_value, new_value.Length, out number_of_bytes_written_4);
+                // ---- address - указатель на структуру контрола текстбокса чата, ищу в цикле по названию контрола
+                // ---- конвертируем адрес структуры контрола в массив байтов
+                Byte[] chatBoxObjPtrBytes = BitConverter.GetBytes(address);
+                chatBoxObjPtrBytes.Reverse();
+                // ---- записываем указатель на текстбокс по адресу опкода + 2
+                Int32 number_of_bytes_written_5;
+                WinApi.WriteProcessMemory(oph, (Int32)setChatTextOpcodeAddress + 7, chatBoxObjPtrBytes, chatBoxObjPtrBytes.Length, out number_of_bytes_written_5);
+                // ---- запускаем записанную в память функцию
+                IntPtr lpThreadId;
+                IntPtr hProcThread = WinApi.CreateRemoteThread(oph, IntPtr.Zero, 0, (IntPtr)setChatTextOpcodeAddress, IntPtr.Zero, 0, out lpThreadId);
+                // ---- Ожидаем завершения функции
+                WinApi.WaitForSingleObject(hProcThread, WinApi.INFINITE);
+                // ---- Подчищаем за собой
+                WinApi.VirtualFreeEx(oph, hProcThread, 20, WinApi.FreeType.Release);
+                WinApi.VirtualFreeEx(oph, setChatTextOpcodeAddress, 20, WinApi.FreeType.Release);
+                WinApi.VirtualFreeEx(oph, text_address, 20, WinApi.FreeType.Release);
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+            
         }
     }
 }

@@ -4,6 +4,7 @@
   <gameAdress>14992476</gameAdress>
   <guiAdress>10359808</guiAdress>
   <sendPacket>8313648</sendPacket>
+  <autoAttack>8433232</autoAttack>
   <useSkill>5113760</useSkill>
   <action_1>5121232</action_1>
   <action_2>5143696</action_2>
@@ -57,4 +58,12 @@
   <msg_form1>12</msg_form1>
   <msg_form2>8</msg_form2>
   <msgWid>32</msgWid>
+  <invent_struct>4448</invent_struct>
+  <invent_struct_2>12</invent_struct_2>
+  <cellsCount>20</cellsCount>
+  <itemInCellType>8</itemInCellType>
+  <itemInCellID>12</itemInCellID>
+  <itemInCellCount>16</itemInCellCount>
+  <itemInCellPrice>28</itemInCellPrice>
+  <itemInCellName>64</itemInCellName>
 </Offset>

@@ -4,6 +4,9 @@ using System.Text;
 using System.Runtime.InteropServices;
 using System.Drawing;
 using System.Windows.Threading;
+using System.Windows;
+using System.Diagnostics;
+using System.Linq;
 
 namespace Nirvana
 {
@@ -246,114 +249,59 @@ namespace Nirvana
         }
 
         /// <summary>
-        /// Узнаем адрес контрола активного окна указанного по ID процесса клиента
+        /// Узнаем адрес контрола активного окна указанного по ID процесса клиента.
+        /// Возвращает {указатель на окно, указатель на команду контрола, указатель на контрол}
         /// </summary>
         /// <param name="processID"></param>
         /// <returns></returns>
-        public static int[] CalcControlAddress(IntPtr oph)
+        public static Int32[] CalcControlAddress(IntPtr oph, String window_name, String control_name, Byte window_lvl)
         {
             try
             {
-                int[] result = { 0, 0 };
-                string name_control = "";
-                int[] offset_win_struct = { 0x1c, 0x18, 0x8, 0x74 };
-                int address_win_struct = ReadInt(oph, Offsets.BaseAdress, offset_win_struct);
-
-                int temp_address = CalcInt32Value(oph, address_win_struct + 0x1cc);
-                for (int k = 0; k < 50; k++)
+                //вводим временный массив дял хранения результатов
+                Int32[] result = { 0, 0, 0 };
+                //вводим пустые переменные для хранения имени окна и контрола
+                String win_name = String.Empty;
+                String name_control = String.Empty;
+                Int32 level = (window_lvl == 1) ? 0x8C : 0xAC;
+                //считываем начало массива структур окон нижнего или верхнего уровня уровня во временную переменную
+                Int32 temp_address = ReadInt(oph, Offsets.BaseAdress, new Int32[] { 0x1c, 0x18, 0x8, level });
+                //в цикле проверяем имя каждого окна, пока не найдем нужное
+                for (Int32 iter = 0; iter < 1500; iter++)
                 {
-                    int window_address = CalcInt32Value(oph, temp_address + 0x4);
-                    for (int j = 0; j < k; j++)
+                    if (iter > 0)
+                        temp_address = CalcInt32Value(oph, temp_address + 0x0);
+                    Int32 temp_address_2 = CalcInt32Value(oph, temp_address + 0x8);
+                    Int32 temp_address_3 = CalcInt32Value(oph, temp_address_2 + 0x4c);
+                    win_name = CalcStringValue_ASCII(oph, temp_address_3 + 0x0);
+                    if (win_name == "")
+                        break;
+                    if (CalcStringValue_ASCII(oph, temp_address_3 + 0x0) == window_name)
                     {
-                        window_address = CalcInt32Value(oph, window_address + 0x4);
-                    }
-                    int controlstruct_address = CalcInt32Value(oph, window_address + 0x8);
-                    window_address = CalcInt32Value(oph, controlstruct_address + 0x18);
-                    name_control = CalcStringValue_ASCII(oph, window_address + 0x0);
-                    if (name_control.IndexOf("Btn_Back") != -1)
-                    {
-                        int address_to_command_control = CalcInt32Value(oph, controlstruct_address + 0x1c);
-                        result[0] = address_win_struct;
-                        result[1] = address_to_command_control;
-                        return result;
-                    }
-                }
-                return result;
-            }
-            catch (Exception ex)
-            {
-                throw ex;
-            }
-        }
-
-        /// <summary>
-        /// Узнаем адрес активного окна
-        /// </summary>
-        /// <param name="oph"></param>
-        /// <returns></returns>
-        public static int CalcAddressActiveWindow(IntPtr oph)
-        {
-            try
-            {
-                int[] offset_win_struct = { 0x1c, 0x18, 0x8, 0x74 };
-                return ReadInt(oph, Offsets.BaseAdress, offset_win_struct);
-            }
-            catch (Exception ex)
-            {
-                throw ex;
-            }
-        }
-
-        /// <summary>
-        /// Узнаем параметры для GUI инжекта по названию неактивного окна и названию контрола
-        /// </summary>
-        /// <param name="processID"></param>
-        /// <param name="window_name"></param>
-        /// <param name="control_name"></param>
-        /// <returns></returns>
-        public static int[] CalcWindowAddress(IntPtr oph, string window_name, string control_name)
-        {
-            try
-            {
-                int[] result = { 0, 0 };
-                string name_control = "";
-                string name_window = "";
-                int[] offset_win_struct = { 0x1c, 0x18, 0x8, 0x8C };
-                int address_win_struct = ReadInt(oph, Offsets.BaseAdress, offset_win_struct);
-                int windowstruct_adress = 0;
-
-                for (int k = 0; k < 1000; k++)
-                {
-                    int window_address = CalcInt32Value(oph, address_win_struct + 0x0);
-                    for (int j = 0; j < k; j++)
-                    {
-                        window_address = CalcInt32Value(oph, window_address + 0x0);
-                    }
-                    windowstruct_adress = CalcInt32Value(oph, window_address + 0x8);
-                    window_address = CalcInt32Value(oph, windowstruct_adress + 0x4c);
-                    name_window = CalcStringValue_ASCII(oph, window_address + 0x0);
-                    if (name_window.IndexOf(window_name) != -1)
-                    {
-                        result[0] = windowstruct_adress;
+                        //сохраняем значение временной переменной и выходим из цикла
+                        result[0] = temp_address_2;
                         break;
                     }
                 }
-
-                int temp_address = CalcInt32Value(oph, windowstruct_adress + 0x1cc);
-                for (int k = 0; k < 50; k++)
-                {
-                    int window_address = CalcInt32Value(oph, temp_address + 0x4);
-                    for (int j = 0; j < k; j++)
+                //если не нашли нужное окно, то выходим и возвращаем 0
+                if (result[0] == 0)
+                    return result;
+                //считываем начало массива контролов найденного окна во временную переменную
+                temp_address = CalcInt32Value(oph, result[0] + 0x1cc);
+                //в цикле проверяем имя каждого контрола, пока не найдем нужное
+                for (Int32 iter = 0; iter < 100; iter++)
+                {   
+                    if (iter > 0)
+                        temp_address = CalcInt32Value(oph, temp_address + 0x4);
+                    //считываем адреса структуры контрола
+                    Int32 controlstruct_address = CalcInt32Value(oph, temp_address + 0x8);
+                    Int32 temp_address_2 = CalcInt32Value(oph, controlstruct_address + 0x18);
+                    name_control = CalcStringValue_ASCII(oph, temp_address_2 + 0x0);
+                    if (CalcStringValue_ASCII(oph, temp_address_2 + 0x0) == control_name)
                     {
-                        window_address = CalcInt32Value(oph, window_address + 0x4);
-                    }
-                    int controlstruct_address = CalcInt32Value(oph, window_address + 0x8);
-                    window_address = CalcInt32Value(oph, controlstruct_address + 0x18);
-                    name_control = CalcStringValue_ASCII(oph, window_address + 0x0);
-                    if (name_control.IndexOf(control_name) != -1)
-                    {
-                        int address_to_command_control = CalcInt32Value(oph, controlstruct_address + 0x1c);
-                        result[1] = address_to_command_control;
+                        //сохраняем значение адреса структуры контрола
+                        result[1] = CalcInt32Value(oph, controlstruct_address + 0x1c);
+                        result[2] = controlstruct_address;
                         return result;
                     }
                 }
@@ -374,6 +322,7 @@ namespace Nirvana
         public static void WriteProcessBytes(IntPtr oph, int value, int adress)
         {
             byte[] new_value = BitConverter.GetBytes(value);
+            new_value.Reverse();
             int number_of_bytes_written;
             WinApi.WriteProcessMemory(oph, adress, new_value, new_value.Length, out number_of_bytes_written);
         }
@@ -436,6 +385,32 @@ namespace Nirvana
             {
                 throw ex;
             }           
+        }
+
+        public static Boolean GetCoord(IntPtr oph, float x1, float y1, float z1)
+        {
+            //Расчитываем нынешние коорды персонажа
+            float x2 = CalcMethods.ReadFloat(oph, Offsets.BaseAdress, Offsets.OffsetsX);
+            float y2 = CalcMethods.ReadFloat(oph, Offsets.BaseAdress, Offsets.OffsetsY);
+            float z2 = CalcMethods.ReadFloat(oph, Offsets.BaseAdress, Offsets.OffsetsZ);
+            //Сравниваем, достиг ли персонаж цели
+            return (Math.Round(x1) == Math.Round(x2) && Math.Round(y1) == Math.Round(y2) && Math.Round(z1) == Math.Round(z2));
+        }
+
+        /// <summary>
+        /// Возвращает стринговое представление рандомного числа из 20 цифр
+        /// </summary>
+        /// <param name="LengthValue"></param>
+        /// <returns></returns>
+        public static String RandomStringValue(Int32 LengthValue)
+        {
+            Random rnd = new Random(DateTime.Now.Second);
+            StringBuilder sb = new StringBuilder();
+            for (Int32 i = 0; i < LengthValue; i++)
+            {
+                sb.Append(rnd.Next(0, 9));
+            }
+            return sb.ToString();
         }
     }
 }

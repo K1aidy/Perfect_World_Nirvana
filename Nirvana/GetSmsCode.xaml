@@ -1,0 +1,30 @@
+﻿<Window x:Class="Nirvana.GetSmsCode"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:Nirvana"
+        mc:Ignorable="d"
+        Title="GetSmsCode" Height="61.333" Width="150" ResizeMode="NoResize" WindowStyle="None" Closing="Window_Closing" WindowStartupLocation="CenterOwner">
+    <Window.Background>
+        <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
+            <GradientStop Color="#FFBBDDEA" Offset="0"/>
+            <GradientStop Color="#FFDDE4E6" Offset="1"/>
+        </LinearGradientBrush>
+    </Window.Background>
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="15*"/>
+            <ColumnDefinition Width="122*"/>
+            <ColumnDefinition Width="15*"/>
+        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="30*"/>
+            <RowDefinition Height="20*"/>
+            <RowDefinition Height="8*"/>
+        </Grid.RowDefinitions>
+        <Label x:Name="smsLabel" Content="Введите код из СМС" RenderTransformOrigin="0.482,0.231" VerticalAlignment="Center" HorizontalAlignment="Center" Margin="14,2,1,2" Grid.ColumnSpan="2" Height="26" Width="120"/>
+        <TextBox x:Name="smsBox" Height="21" Margin="0,0,1,0" Grid.Row="1" TextWrapping="Wrap" VerticalAlignment="Top" Grid.Column="1" Grid.RowSpan="2" SelectionBrush="{x:Null}" Background="#FFE6E6F0" KeyUp="textBox_KeyUp" MouseLeave="smsBox_MouseLeave"/>
+
+    </Grid>
+</Window>

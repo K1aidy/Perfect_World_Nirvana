@@ -63,11 +63,23 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="Account.cs" />
+    <Compile Include="AddAccount.xaml.cs">
+      <DependentUpon>AddAccount.xaml</DependentUpon>
+    </Compile>
     <Compile Include="ChatReader.cs" />
     <Compile Include="CommandBase.cs" />
     <Compile Include="FormatText.cs" />
+    <Compile Include="GetSmsCode.xaml.cs">
+      <DependentUpon>GetSmsCode.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Injects.cs" />
+    <Compile Include="KillBoss.cs" />
+    <Compile Include="LoginSettings.xaml.cs">
+      <DependentUpon>LoginSettings.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Message.cs" />
+    <Compile Include="Models\RelayCommand.cs" />
     <Compile Include="MyBalloon.xaml.cs">
       <DependentUpon>MyBalloon.xaml</DependentUpon>
     </Compile>
@@ -76,10 +88,24 @@
     <Compile Include="Offset.cs" />
     <Compile Include="Packets.cs" />
     <Compile Include="MySettings.cs" />
+    <Compile Include="Loging.cs" />
     <Compile Include="SimonSayMethods.cs" />
     <Compile Include="Skill.cs" />
     <Compile Include="StateEnum.cs" />
+    <Compile Include="ViewModels\HeadViewModel.cs" />
     <Compile Include="WinApi.cs" />
+    <Page Include="AddAccount.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="GetSmsCode.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="LoginSettings.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
@@ -144,6 +170,21 @@
   </ItemGroup>
   <ItemGroup>
     <Resource Include="Resources\close.jpg" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\add.jpg" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\delete.jpg" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\play.jpg" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\set.jpg" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Views\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

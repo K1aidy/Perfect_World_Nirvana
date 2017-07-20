@@ -20,6 +20,8 @@ namespace Nirvana
         static int gameAdress;
         //GUI адрес
         static int guiAdress;
+        //адрес для инжекта автоатаки
+        static int autoAttack;
         //адрес для инжекта скиллов
         static int useSkill;
         //адрес для отправки пакетов
@@ -110,7 +112,22 @@ namespace Nirvana
         static int offsetToMobName;
         //смещение до wid моба
         static int offsetToMobWid;
-
+        //смещение к структуре инвентаря
+        static int invent_struct;
+        //смещение к началу списка ячеек
+        static int invent_struct_2;
+        //смещение до счетчика количества ячеек в инвентаре
+        static int cellsCount;
+        //смещение до типа предмета в ячейке
+        static int itemInCellType;
+        //смещение до id предмета в ячейке
+        static int itemInCellID;
+        //смещение до количества предметов в ячейке
+        static int itemInCellCount;
+        //смещение до цены предмета в ячейке
+        static int itemInCellPrice;
+        //смещение до имени предмета в ячейке
+        static int itemInCellName;
         #endregion
 
         /// <summary>
@@ -133,6 +150,7 @@ namespace Nirvana
             offsetsBufsCount = new int[] { offsetToGameAdress, offsetToPersStruct, offsetToCountBufs };
             offsetsMobsCount = new int[] { offsetToGameAdress, offsetToHashTables, offsetToMobsStruct, offsetToMobsCount };
             offsetsPlayersCount = new int[] { offsetToGameAdress, offsetToHashTables, offsetToPlayersStruct, offsetToPlayersCount };
+            offsetsInventCellsCount = new int[] { offsetToGameAdress, offsetToPersStruct, invent_struct, cellsCount };
         }
 
         #region Цепочки смещений
@@ -168,6 +186,8 @@ namespace Nirvana
         static int[] offsetsMobsCount;
         //цепочка смещение до счетчика игроков
         static int[] offsetsPlayersCount;
+        //цепочка смещение до счетчика ячеек инвентаря
+        static int[] offsetsInventCellsCount;
         //цепочка оффсетов до ID скилла
         public static int[] OffsetsToIdSkill(int iter)
         {
@@ -231,6 +251,31 @@ namespace Nirvana
         public static int OffsetsMsgForm2(int chatStartAddress, int iter)
         {
             return (chatStartAddress + (iter * 0x24)) + msg_form2;
+        }
+        //цепочка оффсетов до типа предмета в ячейке
+        public static int[] OffsetsItemInCellType( int iter)
+        {
+            return new int[] { offsetToGameAdress, offsetToPersStruct, invent_struct, invent_struct_2, 0x4 * iter, itemInCellType };
+        }
+        //цепочка оффсетов до ID предмета в ячейке
+        public static int[] OffsetsItemInCellID(int iter)
+        {
+            return new int[] { offsetToGameAdress, offsetToPersStruct, invent_struct, invent_struct_2, 0x4 * iter, itemInCellID };
+        }
+        //цепочка оффсетов до количества предметов в ячейке
+        public static int[] OffsetsItemInCellCount(int iter)
+        {
+            return new int[] { offsetToGameAdress, offsetToPersStruct, invent_struct, invent_struct_2, 0x4 * iter, itemInCellCount };
+        }
+        //цепочка оффсетов до цены предмета в ячейке
+        public static int[] OffsetsItemInCellPrice(int iter)
+        {
+            return new int[] { offsetToGameAdress, offsetToPersStruct, invent_struct, invent_struct_2, 0x4 * iter, itemInCellPrice };
+        }
+        //цепочка оффсетов до имени предмета в ячейке
+        public static int[] OffsetsItemInCellName(int iter)
+        {
+            return new int[] { offsetToGameAdress, offsetToPersStruct, invent_struct, invent_struct_2, 0x4 * iter, itemInCellName, 0x0 };
         }
 
         #endregion
@@ -1050,6 +1095,136 @@ namespace Nirvana
             set
             {
                 msgWid = value;
+            }
+        }
+
+        public static int Invent_struct
+        {
+            get
+            {
+                return invent_struct;
+            }
+
+            set
+            {
+                invent_struct = value;
+            }
+        }
+
+        public static int Invent_struct_2
+        {
+            get
+            {
+                return invent_struct_2;
+            }
+
+            set
+            {
+                invent_struct_2 = value;
+            }
+        }
+
+        public static int CellsCount
+        {
+            get
+            {
+                return cellsCount;
+            }
+
+            set
+            {
+                cellsCount = value;
+            }
+        }
+
+        public static int ItemInCellType
+        {
+            get
+            {
+                return itemInCellType;
+            }
+
+            set
+            {
+                itemInCellType = value;
+            }
+        }
+
+        public static int ItemInCellID
+        {
+            get
+            {
+                return itemInCellID;
+            }
+
+            set
+            {
+                itemInCellID = value;
+            }
+        }
+
+        public static int ItemInCellCount
+        {
+            get
+            {
+                return itemInCellCount;
+            }
+
+            set
+            {
+                itemInCellCount = value;
+            }
+        }
+
+        public static int ItemInCellPrice
+        {
+            get
+            {
+                return itemInCellPrice;
+            }
+
+            set
+            {
+                itemInCellPrice = value;
+            }
+        }
+
+        public static int ItemInCellName
+        {
+            get
+            {
+                return itemInCellName;
+            }
+
+            set
+            {
+                itemInCellName = value;
+            }
+        }
+
+        public static int[] OffsetsInventCellsCount
+        {
+            get
+            {
+                return offsetsInventCellsCount;
+            }
+
+            set
+            {
+                offsetsInventCellsCount = value;
+            }
+        }
+
+        public static int AutoAttack
+        {
+            get
+            {
+                return autoAttack;
+            }
+
+            set
+            {
+                autoAttack = value;
             }
         }
 

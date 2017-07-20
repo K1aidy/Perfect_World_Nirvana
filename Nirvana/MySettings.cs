@@ -10,22 +10,25 @@ namespace Nirvana
     public class MySettings
     {
         #region Состояние чекбоксов "следовать", "бафать" и "дебафать"
-        List<List<bool>> checkbox_set = new List<List<bool>>(11);
+        List<List<Boolean>> checkbox_set = new List<List<Boolean>>(11);
         #endregion
 
         //чекбокс "смена ПЛ при пересборе"
-        bool changePl;
+        Boolean changePl;
 
-        string party_and_pl;
-        string peresbor_v_nirku;
-        string rebaf;
-        string peresbor;
-        string to_him;
-        string pechat;
-        string stop;
+        String party_and_pl;
+        String peresbor_v_nirku;
+        String rebaf;
+        String peresbor;
+        String to_him;
+        String pechat;
+        String stop;
+        String downloader;
+        String userId_1;
+        String userId_2;
 
 
-        public string Party_and_pl
+        public String Party_and_pl
         {
             get
             {
@@ -38,7 +41,7 @@ namespace Nirvana
             }
         }
 
-        public string Peresbor_v_nirku
+        public String Peresbor_v_nirku
         {
             get
             {
@@ -51,7 +54,7 @@ namespace Nirvana
             }
         }
 
-        public string Rebaf
+        public String Rebaf
         {
             get
             {
@@ -64,7 +67,7 @@ namespace Nirvana
             }
         }
 
-        public string Peresbor
+        public String Peresbor
         {
             get
             {
@@ -77,7 +80,7 @@ namespace Nirvana
             }
         }
 
-        public string Pechat
+        public String Pechat
         {
             get
             {
@@ -90,7 +93,7 @@ namespace Nirvana
             }
         }
 
-        public string To_him
+        public String To_him
         {
             get
             {
@@ -103,7 +106,7 @@ namespace Nirvana
             }
         }
 
-        public List<List<bool>> Checkbox_set
+        public List<List<Boolean>> Checkbox_set
         {
             get
             {
@@ -116,7 +119,7 @@ namespace Nirvana
             }
         }
 
-        public string Stop
+        public String Stop
         {
             get
             {
@@ -129,7 +132,7 @@ namespace Nirvana
             }
         }
 
-        public bool ChangePl
+        public Boolean ChangePl
         {
             get
             {
@@ -139,6 +142,45 @@ namespace Nirvana
             set
             {
                 changePl = value;
+            }
+        }
+
+        public String Downloader
+        {
+            get
+            {
+                return downloader;
+            }
+
+            set
+            {
+                downloader = value;
+            }
+        }
+
+        public String UserId_1
+        {
+            get
+            {
+                return userId_1;
+            }
+
+            set
+            {
+                userId_1 = value;
+            }
+        }
+
+        public String UserId_2
+        {
+            get
+            {
+                return userId_2;
+            }
+
+            set
+            {
+                userId_2 = value;
             }
         }
     }

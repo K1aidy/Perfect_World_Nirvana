@@ -14,5 +14,8 @@
     <Setting Name="log_open" Type="System.Boolean" Scope="User">
       <Value Profile="(Default)">False</Value>
     </Setting>
+    <Setting Name="Width" Type="System.Double" Scope="User">
+      <Value Profile="(Default)">640</Value>
+    </Setting>
   </Settings>
 </SettingsFile>
