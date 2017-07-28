@@ -3,7 +3,7 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:local="clr-namespace:Nirvana"
              xmlns:Themes="clr-namespace:Microsoft.Windows.Themes;assembly=PresentationFramework.Aero" x:Class="Nirvana.App"
-             StartupUri="MainWindow.xaml">
+             StartupUri="Views\MainWindow.xaml">
     <Application.Resources>
 
         <Style x:Key="ButtonFocusVisual">

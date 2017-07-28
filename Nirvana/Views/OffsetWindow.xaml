@@ -1,0 +1,485 @@
+﻿<Window x:Class="Nirvana.Views.OffsetWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:Nirvana.Views"
+        mc:Ignorable="d"
+        Title="Оффсеты" AllowsTransparency="True" ResizeMode="NoResize" WindowStartupLocation="CenterScreen" WindowStyle="None" ShowInTaskbar="False" WindowState="Maximized" Height="551.692" Foreground="White" Background="#F2CAD4DE">
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition/>
+            <ColumnDefinition/>
+            <ColumnDefinition/>
+            <ColumnDefinition/>
+            <ColumnDefinition/>
+            <ColumnDefinition/>
+            <ColumnDefinition/>
+            <ColumnDefinition/>
+            <ColumnDefinition/>
+            <ColumnDefinition/>
+            <ColumnDefinition/>
+            <ColumnDefinition/>
+            <ColumnDefinition/>
+            <ColumnDefinition/>
+            <ColumnDefinition/>
+            <ColumnDefinition/>
+        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition/>
+            <RowDefinition/>
+            <RowDefinition/>
+            <RowDefinition/>
+            <RowDefinition/>
+            <RowDefinition/>
+            <RowDefinition/>
+            <RowDefinition/>
+            <RowDefinition/>
+            <RowDefinition/>
+            <RowDefinition/>
+            <RowDefinition/>
+            <RowDefinition/>
+            <RowDefinition/>
+            <RowDefinition/>
+            <RowDefinition/>
+            <RowDefinition/>
+            <RowDefinition/>
+            <RowDefinition/>
+            <RowDefinition/>
+            <RowDefinition/>
+            <RowDefinition/>
+            <RowDefinition/>
+            <RowDefinition/>
+            <RowDefinition/>
+            <RowDefinition/>
+            <RowDefinition/>
+            <RowDefinition/>
+            <RowDefinition/>
+            <RowDefinition/>
+            <RowDefinition/>
+            <RowDefinition/>
+            <RowDefinition/>
+            <RowDefinition/>
+            <RowDefinition/>
+            <RowDefinition/>
+        </Grid.RowDefinitions>
+        <Grid Grid.ColumnSpan="4" Grid.Column="1" Grid.Row="1" Grid.RowSpan="32" Margin="0,10">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="5*"/>
+                <RowDefinition Height="90*"/>
+                <RowDefinition Height="5*"/>
+            </Grid.RowDefinitions>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="10*"/>
+                <ColumnDefinition Width="80*"/>
+                <ColumnDefinition Width="10*"/>
+            </Grid.ColumnDefinitions>
+            <ListBox x:Name="listOffset_1" Grid.ColumnSpan="3" Margin="10" Grid.RowSpan="3" 
+                     Background="#F2CAD4DE" ScrollViewer.HorizontalScrollBarVisibility="Auto" ScrollViewer.VerticalScrollBarVisibility="Hidden" Foreground="White" BorderBrush="#FF828282">
+                <ListBoxItem HorizontalAlignment="Center">
+                    <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Center">
+                        <TextBox IsReadOnly="True" Margin="5">Version</TextBox>
+                        <TextBox Margin="5" Text="{Binding Version}"></TextBox>
+                    </StackPanel>
+                </ListBoxItem>
+                <ListBoxItem HorizontalAlignment="Center">
+                    <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Center">
+                        <TextBox IsReadOnly="True" Margin="5">BaseAddress</TextBox>
+                        <TextBox Margin="5" Text="{Binding BA}"></TextBox>
+                    </StackPanel>
+                </ListBoxItem>
+                <ListBoxItem HorizontalAlignment="Center">
+                    <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Center">
+                        <TextBox IsReadOnly="True" Margin="5">GameAddress</TextBox>
+                        <TextBox Margin="5" Text="{Binding GA}"></TextBox>
+                    </StackPanel>
+                </ListBoxItem>
+                <ListBoxItem HorizontalAlignment="Center">
+                    <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Center">
+                        <TextBox IsReadOnly="True" Margin="5">GuiAdd</TextBox>
+                        <TextBox Margin="5" Text="{Binding GuiAdd}"></TextBox>
+                    </StackPanel>
+                </ListBoxItem>
+                <ListBoxItem HorizontalAlignment="Center">
+                    <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Center">
+                        <TextBox IsReadOnly="True" Margin="5">SendPacket</TextBox>
+                        <TextBox Margin="5" Text="{Binding SendPacket}"></TextBox>
+                    </StackPanel>
+                </ListBoxItem>
+                <ListBoxItem HorizontalAlignment="Center">
+                    <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Center">
+                        <TextBox IsReadOnly="True" Margin="5">AutoAttack</TextBox>
+                        <TextBox Margin="5" Text="{Binding AutoAttack}"></TextBox>
+                    </StackPanel>
+                </ListBoxItem>
+                <ListBoxItem HorizontalAlignment="Center">
+                    <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Center">
+                        <TextBox IsReadOnly="True" Margin="5">UseSkill</TextBox>
+                        <TextBox Margin="5" Text="{Binding UseSkill}"></TextBox>
+                    </StackPanel>
+                </ListBoxItem>
+                <ListBoxItem HorizontalAlignment="Center">
+                    <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Center">
+                        <TextBox IsReadOnly="True" Margin="5">Action_1</TextBox>
+                        <TextBox Margin="5" Text="{Binding Action_1}"></TextBox>
+                    </StackPanel>
+                </ListBoxItem>
+                <ListBoxItem HorizontalAlignment="Center">
+                    <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Center">
+                        <TextBox IsReadOnly="True" Margin="5">Action_2</TextBox>
+                        <TextBox Margin="5" Text="{Binding Action_2}"></TextBox>
+                    </StackPanel>
+                </ListBoxItem>
+                <ListBoxItem HorizontalAlignment="Center">
+                    <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Center">
+                        <TextBox IsReadOnly="True" Margin="5">Action_3</TextBox>
+                        <TextBox Margin="5" Text="{Binding Action_3}"></TextBox>
+                    </StackPanel>
+                </ListBoxItem>
+                <ListBoxItem HorizontalAlignment="Center">
+                    <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Center">
+                        <TextBox IsReadOnly="True" Margin="5">InviteCount</TextBox>
+                        <TextBox Margin="5" Text="{Binding InviteCount}"></TextBox>
+                    </StackPanel>
+                </ListBoxItem>
+                <ListBoxItem HorizontalAlignment="Center">
+                    <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Center">
+                        <TextBox IsReadOnly="True" Margin="5">InviteStruct</TextBox>
+                        <TextBox Margin="5" Text="{Binding InviteStruct}"></TextBox>
+                    </StackPanel>
+                </ListBoxItem>
+                <ListBoxItem HorizontalAlignment="Center">
+                    <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Center">
+                        <TextBox IsReadOnly="True" Margin="5">ChatStart</TextBox>
+                        <TextBox Margin="5" Text="{Binding ChatStart}"></TextBox>
+                    </StackPanel>
+                </ListBoxItem>
+                <ListBoxItem HorizontalAlignment="Center">
+                    <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Center">
+                        <TextBox IsReadOnly="True" Margin="5">ChatNumber</TextBox>
+                        <TextBox Margin="5" Text="{Binding ChatNumber}"></TextBox>
+                    </StackPanel>
+                </ListBoxItem>
+                <ListBoxItem HorizontalAlignment="Center">
+                    <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Center">
+                        <TextBox IsReadOnly="True" Margin="5">InviteWidPlayer</TextBox>
+                        <TextBox Margin="5" Text="{Binding InviteWidPlayer}"></TextBox>
+                    </StackPanel>
+                </ListBoxItem>
+                <ListBoxItem HorizontalAlignment="Center">
+                    <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Center">
+                        <TextBox IsReadOnly="True" Margin="5">InviteWidParty</TextBox>
+                        <TextBox Margin="5" Text="{Binding InviteWidParty}"></TextBox>
+                    </StackPanel>
+                </ListBoxItem>
+                <ListBoxItem HorizontalAlignment="Center">
+                    <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Center">
+                        <TextBox IsReadOnly="True" Margin="5">OffsetToGameAdress</TextBox>
+                        <TextBox Margin="5" Text="{Binding OffsetToGameAdress}"></TextBox>
+                    </StackPanel>
+                </ListBoxItem>
+                <ListBoxItem HorizontalAlignment="Center">
+                    <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Center">
+                        <TextBox IsReadOnly="True" Margin="5">OffsetToPersStruct</TextBox>
+                        <TextBox Margin="5" Text="{Binding OffsetToPersStruct}"></TextBox>
+                    </StackPanel>
+                </ListBoxItem>
+                <ListBoxItem HorizontalAlignment="Center">
+                    <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Center">
+                        <TextBox IsReadOnly="True" Margin="5">OffsetToParty</TextBox>
+                        <TextBox Margin="5" Text="{Binding OffsetToParty}"></TextBox>
+                    </StackPanel>
+                </ListBoxItem>
+                <ListBoxItem HorizontalAlignment="Center">
+                    <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Center">
+                        <TextBox IsReadOnly="True" Margin="5">OffsetToCountParty</TextBox>
+                        <TextBox Margin="5" Text="{Binding OffsetToCountParty}"></TextBox>
+                    </StackPanel>
+                </ListBoxItem>
+                <ListBoxItem HorizontalAlignment="Center">
+                    <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Center">
+                        <TextBox IsReadOnly="True" Margin="5">OffsetToName</TextBox>
+                        <TextBox Margin="5" Text="{Binding OffsetToName}"></TextBox>
+                    </StackPanel>
+                </ListBoxItem>
+            </ListBox>
+        </Grid>
+        <Grid Grid.ColumnSpan="5" Grid.Column="5" Margin="10,10,0,10" Grid.Row="1" Grid.RowSpan="32">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="5*"/>
+                <RowDefinition Height="90*"/>
+                <RowDefinition Height="5*"/>
+            </Grid.RowDefinitions>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="10*"/>
+                <ColumnDefinition Width="80*"/>
+                <ColumnDefinition Width="10*"/>
+            </Grid.ColumnDefinitions>
+            <ListBox x:Name="listOffset_2" Grid.ColumnSpan="3" Margin="10,10,10,10.45" Grid.RowSpan="3"
+                      Background="#F2CAD4DE" ScrollViewer.HorizontalScrollBarVisibility="Auto" ScrollViewer.VerticalScrollBarVisibility="Hidden" Foreground="White" BorderBrush="#FF828282">
+                <ListBoxItem HorizontalAlignment="Center">
+                    <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Center">
+                        <TextBox IsReadOnly="True" Margin="5">OffsetToClassID</TextBox>
+                        <TextBox Margin="5" Text="{Binding OffsetToClassID}"></TextBox>
+                    </StackPanel>
+                </ListBoxItem>
+                <ListBoxItem HorizontalAlignment="Center">
+                    <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Center">
+                        <TextBox IsReadOnly="True" Margin="5">OffsetToMiningState</TextBox>
+                        <TextBox Margin="5" Text="{Binding OffsetToMiningState}"></TextBox>
+                    </StackPanel>
+                </ListBoxItem>
+                <ListBoxItem HorizontalAlignment="Center">
+                    <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Center">
+                        <TextBox IsReadOnly="True" Margin="5">OffsetToWidWin_QuickAction</TextBox>
+                        <TextBox Margin="5" Text="{Binding OffsetToWidWin_QuickAction}"></TextBox>
+                    </StackPanel>
+                </ListBoxItem>
+                <ListBoxItem HorizontalAlignment="Center">
+                    <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Center">
+                        <TextBox IsReadOnly="True" Margin="5">OffsetToX</TextBox>
+                        <TextBox Margin="5" Text="{Binding OffsetToX}"></TextBox>
+                    </StackPanel>
+                </ListBoxItem>
+                <ListBoxItem HorizontalAlignment="Center">
+                    <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Center">
+                        <TextBox IsReadOnly="True" Margin="5">OffsetToY</TextBox>
+                        <TextBox Margin="5" Text="{Binding OffsetToY}"></TextBox>
+                    </StackPanel>
+                </ListBoxItem>
+                <ListBoxItem HorizontalAlignment="Center">
+                    <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Center">
+                        <TextBox IsReadOnly="True" Margin="5">OffsetToZ</TextBox>
+                        <TextBox Margin="5" Text="{Binding OffsetToZ}"></TextBox>
+                    </StackPanel>
+                </ListBoxItem>
+                <ListBoxItem HorizontalAlignment="Center">
+                    <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Center">
+                        <TextBox IsReadOnly="True" Margin="5">OffsetToWalkMode</TextBox>
+                        <TextBox Margin="5" Text="{Binding OffsetToWalkMode}"></TextBox>
+                    </StackPanel>
+                </ListBoxItem>
+                <ListBoxItem HorizontalAlignment="Center">
+                    <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Center">
+                        <TextBox IsReadOnly="True" Margin="5">OffsetToWid</TextBox>
+                        <TextBox Margin="5" Text="{Binding OffsetToWid}"></TextBox>
+                    </StackPanel>
+                </ListBoxItem>
+                <ListBoxItem HorizontalAlignment="Center">
+                    <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Center">
+                        <TextBox IsReadOnly="True" Margin="5">OffsetToTargetWid</TextBox>
+                        <TextBox Margin="5" Text="{Binding OffsetToTargetWid}"></TextBox>
+                    </StackPanel>
+                </ListBoxItem>
+                <ListBoxItem HorizontalAlignment="Center">
+                    <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Center">
+                        <TextBox IsReadOnly="True" Margin="5">OffsetToStructParty</TextBox>
+                        <TextBox Margin="5" Text="{Binding OffsetToStructParty}"></TextBox>
+                    </StackPanel>
+                </ListBoxItem>
+                <ListBoxItem HorizontalAlignment="Center">
+                    <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Center">
+                        <TextBox IsReadOnly="True" Margin="5">OffsetsLocationName</TextBox>
+                        <TextBox Margin="5" Text="{Binding OffsetsLocationName_0}"></TextBox>
+                        <TextBox Margin="5" Text="{Binding OffsetsLocationName_1}"></TextBox>
+                        <TextBox Margin="5" Text="{Binding OffsetsLocationName_2}"></TextBox>
+                        <TextBox Margin="5" Text="{Binding OffsetsLocationName_3}"></TextBox>
+                        <TextBox Margin="5" Text="{Binding OffsetsLocationName_4}"></TextBox>
+                    </StackPanel>
+                </ListBoxItem>
+                <ListBoxItem HorizontalAlignment="Center">
+                    <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Center">
+                        <TextBox IsReadOnly="True" Margin="5">OffsetToSkillsCount</TextBox>
+                        <TextBox Margin="5" Text="{Binding OffsetToSkillsCount}"></TextBox>
+                    </StackPanel>
+                </ListBoxItem>
+                <ListBoxItem HorizontalAlignment="Center">
+                    <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Center">
+                        <TextBox IsReadOnly="True" Margin="5">OffsetToSkillsArray</TextBox>
+                        <TextBox Margin="5" Text="{Binding OffsetToSkillsArray}"></TextBox>
+                    </StackPanel>
+                </ListBoxItem>
+                <ListBoxItem HorizontalAlignment="Center">
+                    <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Center">
+                        <TextBox IsReadOnly="True" Margin="5">OffsetToCurrentSkill</TextBox>
+                        <TextBox Margin="5" Text="{Binding OffsetToCurrentSkill}"></TextBox>
+                    </StackPanel>
+                </ListBoxItem>
+                <ListBoxItem HorizontalAlignment="Center">
+                    <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Center">
+                        <TextBox IsReadOnly="True" Margin="5">OffsetToIdSkill</TextBox>
+                        <TextBox Margin="5" Text="{Binding OffsetToIdSkill}"></TextBox>
+                    </StackPanel>
+                </ListBoxItem>
+                <ListBoxItem HorizontalAlignment="Center">
+                    <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Center">
+                        <TextBox IsReadOnly="True" Margin="5">OffsetToCdSkill</TextBox>
+                        <TextBox Margin="5" Text="{Binding OffsetToCdSkill}"></TextBox>
+                    </StackPanel>
+                </ListBoxItem>
+                <ListBoxItem HorizontalAlignment="Center">
+                    <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Center">
+                        <TextBox IsReadOnly="True" Margin="5">OffsetToCountBufs</TextBox>
+                        <TextBox Margin="5" Text="{Binding OffsetToCountBufs}"></TextBox>
+                    </StackPanel>
+                </ListBoxItem>
+                <ListBoxItem HorizontalAlignment="Center">
+                    <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Center">
+                        <TextBox IsReadOnly="True" Margin="5">OffsetToBufsArray</TextBox>
+                        <TextBox Margin="5" Text="{Binding OffsetToBufsArray}"></TextBox>
+                    </StackPanel>
+                </ListBoxItem>
+                <ListBoxItem HorizontalAlignment="Center">
+                    <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Center">
+                        <TextBox IsReadOnly="True" Margin="5">OffsetToHashTables</TextBox>
+                        <TextBox Margin="5" Text="{Binding OffsetToHashTables}"></TextBox>
+                    </StackPanel>
+                </ListBoxItem>
+                <ListBoxItem HorizontalAlignment="Center">
+                    <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Center">
+                        <TextBox IsReadOnly="True" Margin="5">OffsetToMobsStruct</TextBox>
+                        <TextBox Margin="5" Text="{Binding OffsetToMobsStruct}"></TextBox>
+                    </StackPanel>
+                </ListBoxItem>
+            </ListBox>
+        </Grid>
+        <Grid Grid.ColumnSpan="5" Margin="10,13,0,7" Grid.RowSpan="32" Grid.Column="10" Grid.Row="1">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="5*"/>
+                <RowDefinition Height="90*"/>
+                <RowDefinition Height="5*"/>
+            </Grid.RowDefinitions>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="10*"/>
+                <ColumnDefinition Width="80*"/>
+                <ColumnDefinition Width="10*"/>
+            </Grid.ColumnDefinitions>
+            <ListBox x:Name="listOffset_3" Grid.ColumnSpan="3" Margin="10,10,10,10.45" Grid.RowSpan="3"
+        		Background="#F2CAD4DE" ScrollViewer.HorizontalScrollBarVisibility="Auto" ScrollViewer.VerticalScrollBarVisibility="Hidden" Foreground="White" BorderBrush="#FF828282">
+                <ListBoxItem HorizontalAlignment="Center">
+                    <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Center">
+                        <TextBox IsReadOnly="True" Margin="5">OffsetToBeginMobsStruct</TextBox>
+                        <TextBox Margin="5" Text="{Binding OffsetToBeginMobsStruct}"></TextBox>
+                    </StackPanel>
+                </ListBoxItem>
+                <ListBoxItem HorizontalAlignment="Center">
+                    <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Center">
+                        <TextBox IsReadOnly="True" Margin="5">OffsetToMobsCount</TextBox>
+                        <TextBox Margin="5" Text="{Binding OffsetToMobsCount}"></TextBox>
+                    </StackPanel>
+                </ListBoxItem>
+                <ListBoxItem HorizontalAlignment="Center">
+                    <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Center">
+                        <TextBox IsReadOnly="True" Margin="5">OffsetToMobName</TextBox>
+                        <TextBox Margin="5" Text="{Binding OffsetToMobName}"></TextBox>
+                    </StackPanel>
+                </ListBoxItem>
+                <ListBoxItem HorizontalAlignment="Center">
+                    <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Center">
+                        <TextBox IsReadOnly="True" Margin="5">OffsetToMobWid</TextBox>
+                        <TextBox Margin="5" Text="{Binding OffsetToMobWid}"></TextBox>
+                    </StackPanel>
+                </ListBoxItem>
+                <ListBoxItem HorizontalAlignment="Center">
+                    <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Center">
+                        <TextBox IsReadOnly="True" Margin="5">OffsetToPlayersStruct</TextBox>
+                        <TextBox Margin="5" Text="{Binding OffsetToPlayersStruct}"></TextBox>
+                    </StackPanel>
+                </ListBoxItem>
+                <ListBoxItem HorizontalAlignment="Center">
+                    <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Center">
+                        <TextBox IsReadOnly="True" Margin="5">OffsetToBeginPlayersStruct</TextBox>
+                        <TextBox Margin="5" Text="{Binding OffsetToBeginPlayersStruct}"></TextBox>
+                    </StackPanel>
+                </ListBoxItem>
+                <ListBoxItem HorizontalAlignment="Center">
+                    <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Center">
+                        <TextBox IsReadOnly="True" Margin="5">OffsetToPlayersCount</TextBox>
+                        <TextBox Margin="5" Text="{Binding OffsetToPlayersCount}"></TextBox>
+                    </StackPanel>
+                </ListBoxItem>
+                <ListBoxItem HorizontalAlignment="Center">
+                    <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Center">
+                        <TextBox IsReadOnly="True" Margin="5">MsgId</TextBox>
+                        <TextBox Margin="5" Text="{Binding MsgId}"></TextBox>
+                    </StackPanel>
+                </ListBoxItem>
+                <ListBoxItem HorizontalAlignment="Center">
+                    <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Center">
+                        <TextBox IsReadOnly="True" Margin="5">MsgType</TextBox>
+                        <TextBox Margin="5" Text="{Binding MsgType}"></TextBox>
+                    </StackPanel>
+                </ListBoxItem>
+                <ListBoxItem HorizontalAlignment="Center">
+                    <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Center">
+                        <TextBox IsReadOnly="True" Margin="5">Msg_form1</TextBox>
+                        <TextBox Margin="5" Text="{Binding Msg_form1}"></TextBox>
+                    </StackPanel>
+                </ListBoxItem>
+                <ListBoxItem HorizontalAlignment="Center">
+                    <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Center">
+                        <TextBox IsReadOnly="True" Margin="5">Msg_form2</TextBox>
+                        <TextBox Margin="5" Text="{Binding Msg_form2}"></TextBox>
+                    </StackPanel>
+                </ListBoxItem>
+                <ListBoxItem HorizontalAlignment="Center">
+                    <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Center">
+                        <TextBox IsReadOnly="True" Margin="5">MsgWid</TextBox>
+                        <TextBox Margin="5" Text="{Binding MsgWid}"></TextBox>
+                    </StackPanel>
+                </ListBoxItem>
+                <ListBoxItem HorizontalAlignment="Center">
+                    <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Center">
+                        <TextBox IsReadOnly="True" Margin="5">Invent_struct</TextBox>
+                        <TextBox Margin="5" Text="{Binding Invent_struct}"></TextBox>
+                    </StackPanel>
+                </ListBoxItem>
+                <ListBoxItem HorizontalAlignment="Center">
+                    <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Center">
+                        <TextBox IsReadOnly="True" Margin="5">Invent_struct_2</TextBox>
+                        <TextBox Margin="5" Text="{Binding Invent_struct_2}"></TextBox>
+                    </StackPanel>
+                </ListBoxItem>
+                <ListBoxItem HorizontalAlignment="Center">
+                    <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Center">
+                        <TextBox IsReadOnly="True" Margin="5">CellsCount</TextBox>
+                        <TextBox Margin="5" Text="{Binding CellsCount}"></TextBox>
+                    </StackPanel>
+                </ListBoxItem>
+                <ListBoxItem HorizontalAlignment="Center">
+                    <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Center">
+                        <TextBox IsReadOnly="True" Margin="5">ItemInCellType</TextBox>
+                        <TextBox Margin="5" Text="{Binding ItemInCellType}"></TextBox>
+                    </StackPanel>
+                </ListBoxItem>
+                <ListBoxItem HorizontalAlignment="Center">
+                    <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Center">
+                        <TextBox IsReadOnly="True" Margin="5">ItemInCellID</TextBox>
+                        <TextBox Margin="5" Text="{Binding ItemInCellID}"></TextBox>
+                    </StackPanel>
+                </ListBoxItem>
+                <ListBoxItem HorizontalAlignment="Center">
+                    <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Center">
+                        <TextBox IsReadOnly="True" Margin="5">ItemInCellCount</TextBox>
+                        <TextBox Margin="5" Text="{Binding ItemInCellCount}"></TextBox>
+                    </StackPanel>
+                </ListBoxItem>
+                <ListBoxItem HorizontalAlignment="Center">
+                    <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Center">
+                        <TextBox IsReadOnly="True" Margin="5">ItemInCellPrice</TextBox>
+                        <TextBox Margin="5" Text="{Binding ItemInCellPrice}"></TextBox>
+                    </StackPanel>
+                </ListBoxItem>
+                <ListBoxItem HorizontalAlignment="Center">
+                    <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Center">
+                        <TextBox IsReadOnly="True" Margin="5">ItemInCellName</TextBox>
+                        <TextBox Margin="5" Text="{Binding ItemInCellName}"></TextBox>
+                    </StackPanel>
+                </ListBoxItem>
+            </ListBox>
+        </Grid>
+        <Button x:Name="ok_btn" Grid.ColumnSpan="3" Content="Ok" Grid.Column="8" Grid.Row="33" Grid.RowSpan="2" Click="Ok_Click"/>
+        <Button x:Name="cancel_btn" Grid.ColumnSpan="3" Content="Cancel" Grid.Column="12" Grid.Row="33" Grid.RowSpan="2" Click="Cancel_Click"/>
+
+    </Grid>
+</Window>

@@ -1,71 +1,41 @@
 <?xml version="1.0"?>
 <MySettings xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
   <Party_and_pl>123</Party_and_pl>
-  <Peresbor_v_nirku>пб в нирку</Peresbor_v_nirku>
+  <Peresbor_v_nirku>го в нирку</Peresbor_v_nirku>
   <Rebaf>ребаф</Rebaf>
   <Peresbor>пб</Peresbor>
-  <Pechat>физнирка</Pechat>
+  <Fiznirka>физнирка</Fiznirka>
   <To_him>го</To_him>
-  <Checkbox_set>
-    <ArrayOfBoolean>
-      <boolean>false</boolean>
-      <boolean>false</boolean>
-      <boolean>false</boolean>
-    </ArrayOfBoolean>
-    <ArrayOfBoolean>
-      <boolean>true</boolean>
-      <boolean>true</boolean>
-      <boolean>true</boolean>
-    </ArrayOfBoolean>
-    <ArrayOfBoolean>
-      <boolean>true</boolean>
-      <boolean>true</boolean>
-      <boolean>true</boolean>
-    </ArrayOfBoolean>
-    <ArrayOfBoolean>
-      <boolean>true</boolean>
-      <boolean>true</boolean>
-      <boolean>true</boolean>
-    </ArrayOfBoolean>
-    <ArrayOfBoolean>
-      <boolean>true</boolean>
-      <boolean>true</boolean>
-      <boolean>true</boolean>
-    </ArrayOfBoolean>
-    <ArrayOfBoolean>
-      <boolean>true</boolean>
-      <boolean>true</boolean>
-      <boolean>true</boolean>
-    </ArrayOfBoolean>
-    <ArrayOfBoolean>
-      <boolean>true</boolean>
-      <boolean>true</boolean>
-      <boolean>true</boolean>
-    </ArrayOfBoolean>
-    <ArrayOfBoolean>
-      <boolean>true</boolean>
-      <boolean>true</boolean>
-      <boolean>true</boolean>
-    </ArrayOfBoolean>
-    <ArrayOfBoolean>
-      <boolean>true</boolean>
-      <boolean>true</boolean>
-      <boolean>true</boolean>
-    </ArrayOfBoolean>
-    <ArrayOfBoolean>
-      <boolean>true</boolean>
-      <boolean>true</boolean>
-      <boolean>true</boolean>
-    </ArrayOfBoolean>
-    <ArrayOfBoolean>
-      <boolean>true</boolean>
-      <boolean>true</boolean>
-      <boolean>true</boolean>
-    </ArrayOfBoolean>
-  </Checkbox_set>
   <Stop>стоп</Stop>
   <ChangePl>true</ChangePl>
-  <Downloader>Downloader/12650 MailRuGameCenter/1265</Downloader>
-  <UserId_1>65745518762333034221</UserId_1>
-  <UserId_2>65745518762333034221</UserId_2>
+  <Check_1_1>true</Check_1_1>
+  <Check_1_2>true</Check_1_2>
+  <Check_1_3>true</Check_1_3>
+  <Check_2_1>true</Check_2_1>
+  <Check_2_2>true</Check_2_2>
+  <Check_2_3>true</Check_2_3>
+  <Check_3_1>true</Check_3_1>
+  <Check_3_2>true</Check_3_2>
+  <Check_3_3>true</Check_3_3>
+  <Check_4_1>true</Check_4_1>
+  <Check_4_2>true</Check_4_2>
+  <Check_4_3>true</Check_4_3>
+  <Check_5_1>true</Check_5_1>
+  <Check_5_2>true</Check_5_2>
+  <Check_5_3>true</Check_5_3>
+  <Check_6_1>true</Check_6_1>
+  <Check_6_2>true</Check_6_2>
+  <Check_6_3>true</Check_6_3>
+  <Check_7_1>true</Check_7_1>
+  <Check_7_2>true</Check_7_2>
+  <Check_7_3>true</Check_7_3>
+  <Check_8_1>true</Check_8_1>
+  <Check_8_2>true</Check_8_2>
+  <Check_8_3>true</Check_8_3>
+  <Check_9_1>true</Check_9_1>
+  <Check_9_2>true</Check_9_2>
+  <Check_9_3>true</Check_9_3>
+  <Check_10_1>true</Check_10_1>
+  <Check_10_2>true</Check_10_2>
+  <Check_10_3>true</Check_10_3>
 </MySettings>
