@@ -2,6 +2,7 @@
 using System.Text;
 using System.Linq;
 using System.Management;
+using Nirvana.Models.TaskBar;
 
 namespace Nirvana.Models.BotModels
 {
@@ -382,13 +383,20 @@ namespace Nirvana.Models.BotModels
         /// <returns></returns>
         public static String RandomStringValue(Int32 LengthValue)
         {
-            Random rnd = new Random(DateTime.Now.Second);
-            StringBuilder sb = new StringBuilder();
-            for (Int32 i = 0; i < LengthValue; i++)
+            try
             {
-                sb.Append(rnd.Next(0, 9));
+                Random rnd = new Random(DateTime.Now.Second);
+                StringBuilder sb = new StringBuilder();
+                for (Int32 i = 0; i < LengthValue; i++)
+                {
+                    sb.Append(rnd.Next(0, 9));
+                }
+                return sb.ToString();
             }
-            return sb.ToString();
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message);
+            }
         }
 
         /// <summary>
@@ -397,15 +405,46 @@ namespace Nirvana.Models.BotModels
         /// <returns></returns>
         public static String GenerateSerialNumber()
         {
-            ManagementObject disk = new ManagementObject("win32_logicaldisk.deviceid=\"" + Environment.GetFolderPath(Environment.SpecialFolder.System).Substring(0, 1) + ":\"");
-            disk.Get();
-            String diskLetter = (disk["VolumeSerialNumber"].ToString());
-            StringBuilder sb = new StringBuilder();
-            foreach (Char c in diskLetter)
+            try
             {
-                sb.Append((Char)((Int32)c ^ 5));
+                ManagementObject disk = new ManagementObject("win32_logicaldisk.deviceid=\"" + Environment.GetFolderPath(Environment.SpecialFolder.System).Substring(0, 1) + ":\"");
+                disk.Get();
+                String diskLetter = (disk["VolumeSerialNumber"].ToString());
+                StringBuilder sb = new StringBuilder();
+                foreach (Char c in diskLetter)
+                {
+                    sb.Append((Char)((Int32)c ^ 5));
+                }
+                return sb.ToString();
             }
-            return sb.ToString();
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message);
+            }
+        }
+
+        /// <summary>
+        /// Всплывающее окно с ошибкой
+        /// </summary>
+        /// <param name="message"></param>
+        public static void ViewException(String message)
+        {
+            try
+            {
+                if (FormatText.baloon_msg.Count < 5)
+                {
+                    FormatText.baloon_msg.Add(new FormatText(message, System.Windows.Media.Brushes.Red, 14, 2));
+                }
+                else
+                {
+                    FormatText.baloon_msg.RemoveAt(0);
+                    FormatText.baloon_msg.Add(new FormatText(message, System.Windows.Media.Brushes.Red, 14, 2));
+                }
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message);
+            }
         }
     }
 }

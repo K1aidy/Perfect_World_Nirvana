@@ -32,6 +32,9 @@ namespace Nirvana.Models.BotModels
             new ObservableCollection<My_Windows>()
 
         };
+
+        public static Boolean CanRefresh { get; set; } = true;
+
         /// <summary>
         /// Коллекция, к которой привязн комбобокс, 
         /// обновляется по таймеру только при изменении количества запущенных персонажей

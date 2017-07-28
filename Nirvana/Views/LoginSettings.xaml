@@ -14,15 +14,17 @@
     </Window.Background>
     <Grid>
         <Grid.RowDefinitions>
-            <RowDefinition Height="18*"/>
-            <RowDefinition Height="23*"/>
-            <RowDefinition Height="19*"/>
+            <RowDefinition Height="11*"/>
             <RowDefinition Height="24*"/>
-            <RowDefinition Height="20*"/>
-            <RowDefinition Height="23*"/>
+            <RowDefinition Height="10*"/>
+            <RowDefinition Height="24*"/>
             <RowDefinition Height="9*"/>
-            <RowDefinition Height="26*"/>
-            <RowDefinition Height="23*"/>
+            <RowDefinition Height="25*"/>
+            <RowDefinition Height="9*"/>
+            <RowDefinition Height="27*"/>
+            <RowDefinition Height="12*"/>
+            <RowDefinition Height="22*"/>
+            <RowDefinition Height="14*"/>
         </Grid.RowDefinitions>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="18*"/>
@@ -30,18 +32,21 @@
             <ColumnDefinition Width="28*"/>
             <ColumnDefinition Width="64*"/>
             <ColumnDefinition Width="20*"/>
-            <ColumnDefinition Width="45*"/>
-            <ColumnDefinition Width="20*"/>
+            <ColumnDefinition Width="18*"/>
+            <ColumnDefinition Width="47*"/>
             <ColumnDefinition Width="19*"/>
         </Grid.ColumnDefinitions>
-        <Button x:Name="button" Content="Ok" Grid.Column="3" Grid.Row="7" Click="button_Click"/>
-        <Button x:Name="button1" Grid.ColumnSpan="2" Content="Cancel" Grid.Column="5" Grid.Row="7" Click="button1_Click"/>
-        <TextBox x:Name="Downloader_txt" Grid.ColumnSpan="4" Grid.Column="2" Grid.Row="1" Text="{Binding Downloader}" TextWrapping="NoWrap" SelectionBrush="{x:Null}" Background="{DynamicResource {x:Static SystemColors.GradientInactiveCaptionBrushKey}}"/>
-        <TextBox x:Name="UserID_txt" Grid.ColumnSpan="4" Grid.Column="2" Grid.Row="3" Text="{Binding UserId_1}" TextWrapping="NoWrap" SelectionBrush="{x:Null}" Background="{DynamicResource {x:Static SystemColors.GradientInactiveCaptionBrushKey}}"/>
-        <TextBox x:Name="UserID2_txt" Grid.ColumnSpan="4" Grid.Column="2" Grid.Row="5" Text="{Binding UserId_2}" TextWrapping="NoWrap" SelectionBrush="{x:Null}" Background="{DynamicResource {x:Static SystemColors.GradientInactiveCaptionBrushKey}}" SpellCheck.IsEnabled="True"/>
+        <Button x:Name="button" Content="Ok" Grid.Column="3" Grid.Row="9" Click="button_Click"/>
+        <Button x:Name="button1" Grid.ColumnSpan="2" Content="Cancel" Grid.Column="5" Grid.Row="9" Click="button1_Click"/>
+        <TextBox x:Name="Downloader_txt" Grid.ColumnSpan="5" Grid.Column="2" Grid.Row="1" Text="{Binding Downloader}" TextWrapping="NoWrap" SelectionBrush="{x:Null}" Background="{DynamicResource {x:Static SystemColors.GradientInactiveCaptionBrushKey}}"/>
+        <TextBox x:Name="UserID_txt" Grid.ColumnSpan="5" Grid.Column="2" Grid.Row="3" Text="{Binding UserId_1}" TextWrapping="NoWrap" SelectionBrush="{x:Null}" Background="{DynamicResource {x:Static SystemColors.GradientInactiveCaptionBrushKey}}"/>
+        <TextBox x:Name="UserID2_txt" Grid.ColumnSpan="5" Grid.Column="2" Grid.Row="5" Text="{Binding UserId_2}" TextWrapping="NoWrap" SelectionBrush="{x:Null}" Background="{DynamicResource {x:Static SystemColors.GradientInactiveCaptionBrushKey}}" SpellCheck.IsEnabled="True"/>
         <Label x:Name="Downloader_lbl" Content="Downloader" Grid.Row="1" Grid.Column="1"/>
         <Label x:Name="UserID_lbl" Content="userId1" Grid.Row="3" Grid.Column="1"/>
         <Label x:Name="UserID2_lbl" Content="userId2" Grid.Column="1" Grid.Row="5"/>
+        <Label x:Name="FilePath_lbl" Content="Путь" Grid.Column="1" Grid.Row="7" Margin="0,1,0,0"/>
+        <TextBox x:Name="FilePath_txt" Grid.ColumnSpan="4" Grid.Column="2" Grid.Row="7" Text="{Binding Filepath}" TextWrapping="NoWrap" SelectionBrush="{x:Null}" Background="{DynamicResource {x:Static SystemColors.GradientInactiveCaptionBrushKey}}" SpellCheck.IsEnabled="True" Margin="0,1,10,0"/>
+        <Button x:Name="Search" Content="..." Grid.Column="6" Margin="0,1,0,0" Grid.Row="7" Click="Search_Click"/>
 
     </Grid>
 </Window>

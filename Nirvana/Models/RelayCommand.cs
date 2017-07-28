@@ -29,7 +29,6 @@ namespace Nirvana.Models
             this.execute(parameter);
         }
 
-
         public RelayCommand(Action<Object> execute, Func<Object, Boolean> canExecute = null)
         {
             this.execute = execute;

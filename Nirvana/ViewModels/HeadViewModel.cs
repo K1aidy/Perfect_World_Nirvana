@@ -68,59 +68,65 @@ namespace Nirvana.ViewModels
         public static MySettings CheckBoxSettings { get; set; }
         //объявляем сериализатор
         XmlSerializer formatter;
-        
+
         /// <summary>
         /// Конструктор, принимает объект иконки трея
         /// </summary>
         /// <param name="tb"></param>
         public HeadViewModel(TaskbarIcon tb)
         {
-            dispatcher = Dispatcher.CurrentDispatcher;
-            thread_object = new Object();
-            //инициализируем объект иконки и объект класса всплывающих сообщений
-            this.Tb = tb;
-            mb = new MyBalloon(tb.GetPopupTrayPosition().X, tb.GetPopupTrayPosition().Y);
-            mb.baloon_panel.ItemsSource = FormatText.baloon_msg;
-            mb.Show();
-            //инициализируем переменную для хранения настроек окна
-            CheckBoxSettings = new MySettings();
-            //инициализируем сериализатор
-            formatter = new XmlSerializer(typeof(MySettings));
-            //загружаем данные из xml при открытии приложения
-            Deserializable();
-            //выгружаем из бд список аккаунтов
-            dbAccounts = new AccountContext();
-            dbAccounts.Accounts.Load();
-            Accounts = dbAccounts.Accounts.Local.ToBindingList();
-            //выгружаем из бд офсеты
-            dbOffsets = new OffsetContext();
-            dbOffsets.Offsets.Load();
-            offsetsFromDb = dbOffsets.Offsets.FirstOrDefault((p) => p.Version == "1.5.5_2591");
-            if (offsetsFromDb != null)
-                OpenOffsets();
-            //выгружаем настройки из бд, в будующем планируется выполнять этот шаг через вебсервис 
-            dbSettings = new SettingContext();
-            dbSettings.Settings.Load();
-            //генерируем уникльный ключ компьютера
-            String serial = CalcMethods.GenerateSerialNumber();
-            //проверяем, есть ли в бд настройки, привязанные к этому ключу
-            settings = dbSettings.Settings.FirstOrDefault((p) => p.Serialnumber == serial);
-            //если настройки отсутствуют, то создаем новые и заносим в бд
-            if (settings == null)
+            try
             {
-                settings = new Models.Login.Setting
+                dispatcher = Dispatcher.CurrentDispatcher;
+                thread_object = new Object();
+                //инициализируем объект иконки и объект класса всплывающих сообщений
+                this.Tb = tb;
+                mb = new MyBalloon(tb.GetPopupTrayPosition().X, tb.GetPopupTrayPosition().Y);
+                mb.baloon_panel.ItemsSource = FormatText.baloon_msg;
+                mb.Show();
+                //инициализируем переменную для хранения настроек окна
+                CheckBoxSettings = new MySettings();
+                //инициализируем сериализатор
+                formatter = new XmlSerializer(typeof(MySettings));
+                //загружаем данные из xml при открытии приложения
+                Deserializable();
+                //выгружаем из бд список аккаунтов
+                dbAccounts = new AccountContext();
+                dbAccounts.Accounts.Load();
+                Accounts = dbAccounts.Accounts.Local.ToBindingList();
+                //выгружаем из бд офсеты
+                dbOffsets = new OffsetContext();
+                dbOffsets.Offsets.Load();
+                offsetsFromDb = dbOffsets.Offsets.FirstOrDefault((p) => p.Version == "1.5.5_2591");
+                if (offsetsFromDb != null)
+                    OpenOffsets();
+                //выгружаем настройки из бд, в будующем планируется выполнять этот шаг через вебсервис 
+                dbSettings = new SettingContext();
+                dbSettings.Settings.Load();
+                //генерируем уникльный ключ компьютера
+                String serial = CalcMethods.GenerateSerialNumber();
+                //проверяем, есть ли в бд настройки, привязанные к этому ключу
+                settings = dbSettings.Settings.FirstOrDefault((p) => p.Serialnumber == serial);
+                //если настройки отсутствуют, то создаем новые и заносим в бд
+                if (settings == null)
                 {
-                    Downloader = "Downloader/12650 MailRuGameCenter/1265",
-                    Serialnumber = CalcMethods.GenerateSerialNumber(),
-                    UserId_1 = CalcMethods.RandomStringValue(20),
-                    UserId_2 = CalcMethods.RandomStringValue(20)
-                };
-                dbSettings.Settings.Add(settings);
-                dbSettings.SaveChanges();
+                    settings = new Models.Login.Setting
+                    {
+                        Downloader = "Downloader/12650 MailRuGameCenter/1265",
+                        Serialnumber = CalcMethods.GenerateSerialNumber(),
+                        UserId_1 = CalcMethods.RandomStringValue(20),
+                        UserId_2 = CalcMethods.RandomStringValue(20),
+                        Filepath = String.Empty
+                    };
+                    dbSettings.Settings.Add(settings);
+                    dbSettings.SaveChanges();
+                }
+                ApplySettings();
             }
-            ApplySettings();
-
-
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message);
+            }
         }
 
         /// <summary>
@@ -159,25 +165,33 @@ namespace Nirvana.ViewModels
                 return loadedCommand ??
                     (loadedCommand = new RelayCommand(
                         (o) => {
-                            MainWindow wnd = o as MainWindow;
-                            if (wnd == null) return;
-                            //заполняем коллекцию комбобоксов для дальнейшей работы
-                            if (comboBoxes == null)
-                                comboBoxes = new ObservableCollection<ComboBox> { wnd.cmbx_pl, wnd.cmbx_otkr_1, wnd.cmbx_otkr_2, wnd.cmbx_otkr_3, wnd.cmbx_otkr_4, wnd.cmbx_otkr_5,
-                                                                                wnd.cmbx_otkr_6, wnd.cmbx_otkr_7, wnd.cmbx_otkr_8, wnd.cmbx_otkr_9, wnd.cmbx_sham};
-                            //задаем фильтр для каждого комбобокса
-                            foreach (ComboBox box in comboBoxes)
+                            try
                             {
-                                Int32 index = comboBoxes.IndexOf(box);
-                                ICollectionView view = CollectionViewSource.GetDefaultView(ListClients.my_windows_clients[index]);
+                                MainWindow wnd = o as MainWindow;
+                                if (wnd == null) return;
+                                //заполняем коллекцию комбобоксов для дальнейшей работы
+                                if (comboBoxes == null)
+                                    comboBoxes = new ObservableCollection<ComboBox> { wnd.cmbx_pl, wnd.cmbx_otkr_1, wnd.cmbx_otkr_2, wnd.cmbx_otkr_3, wnd.cmbx_otkr_4, wnd.cmbx_otkr_5,
+                                                                                wnd.cmbx_otkr_6, wnd.cmbx_otkr_7, wnd.cmbx_otkr_8, wnd.cmbx_otkr_9, wnd.cmbx_sham};
+                                //задаем фильтр для каждого комбобокса
+                                foreach (ComboBox box in comboBoxes)
+                                {
+                                    Int32 index = comboBoxes.IndexOf(box);
+                                    ICollectionView view = CollectionViewSource.GetDefaultView(ListClients.my_windows_clients[index]);
 
-                                view.Filter = str => !ListClients.exList.Where(p => (ListClients.exList.IndexOf(p) != index)).Contains((str as My_Windows).Name);
+                                    view.Filter = str => !ListClients.exList.Where(p => (ListClients.exList.IndexOf(p) != index)).Contains((str as My_Windows).Name);
 
-                                box.ItemsSource = view;
-                                //запускаем таймер для чтения цепочки сообщений для всплывающих окон
-                                if (!FormatText.Timer_1_State())
-                                    FormatText.Start();
+                                    box.ItemsSource = view;
+                                    //запускаем таймер для чтения цепочки сообщений для всплывающих окон
+                                    if (!FormatText.Timer_1_State())
+                                        FormatText.Start();
+                                }
                             }
+                            catch (Exception ex)
+                            {
+                                CalcMethods.ViewException(ex.Message);
+                            }
+                            
                         }));
             }
         }
@@ -190,27 +204,34 @@ namespace Nirvana.ViewModels
                     (openLoginWindowCommand = new RelayCommand(
                         (headWindow) =>
                         {
-                            MainWindow hw = headWindow as MainWindow;
-                            if (headWindow == null) return;
-                            
-                            if (hw.grid_loging.Visibility == Visibility.Hidden)
+                            try
                             {
-                                for (Int32 i = 0; i < 24; i++)
+                                MainWindow hw = headWindow as MainWindow;
+                                if (headWindow == null) return;
+
+                                if (hw.grid_loging.Visibility == Visibility.Hidden)
                                 {
-                                    hw.Width = hw.Width + 10;
-                                    if (hw.Left > 0)
-                                        hw.Left = hw.Left - 10;
+                                    for (Int32 i = 0; i < 24; i++)
+                                    {
+                                        hw.Width = hw.Width + 10;
+                                        if (hw.Left > 0)
+                                            hw.Left = hw.Left - 10;
+                                    }
+                                    hw.grid_loging.Visibility = Visibility.Visible;
                                 }
-                                hw.grid_loging.Visibility = Visibility.Visible;
+                                else
+                                {
+                                    for (Int32 i = 0; i < 24; i++)
+                                    {
+                                        hw.Width = hw.Width - 10;
+                                        hw.Left = hw.Left + 10;
+                                    }
+                                    hw.grid_loging.Visibility = Visibility.Hidden;
+                                }
                             }
-                            else
+                            catch (Exception ex)
                             {
-                                for (Int32 i = 0; i < 24; i++)
-                                {
-                                    hw.Width = hw.Width - 10;
-                                    hw.Left = hw.Left + 10;
-                                }
-                                hw.grid_loging.Visibility = Visibility.Hidden;
+                                CalcMethods.ViewException(ex.Message);
                             }
                         }));
             }
@@ -224,95 +245,101 @@ namespace Nirvana.ViewModels
                     (openOffsetWindowCommand = new RelayCommand(
                         (o) =>
                         {
-                            if (offsetsFromDb == null) return;
-
-                            Views.OffsetWindow off = new Views.OffsetWindow(offsetsFromDb.Clone());
-                            if (off.ShowDialog() == true)
+                            try
                             {
-                                Models.BotModels.Offset tempOfset = new Models.BotModels.Offset();
-                                tempOfset = dbOffsets.Offsets.Find(off.TempOffsets.Id);
-                                if (tempOfset != null)
-                                {
-                                    if (tempOfset.Version == off.TempOffsets.Version)
-                                    {
-                                        tempOfset.BA = off.TempOffsets.BA;
-                                        tempOfset.GA = off.TempOffsets.GA;
-                                        tempOfset.Version = off.TempOffsets.Version;
-                                        tempOfset.GuiAdd = off.TempOffsets.GuiAdd;
-                                        tempOfset.SendPacket = off.TempOffsets.SendPacket;
-                                        tempOfset.AutoAttack = off.TempOffsets.AutoAttack;
-                                        tempOfset.UseSkill = off.TempOffsets.UseSkill;
-                                        tempOfset.Action_1 = off.TempOffsets.Action_1;
-                                        tempOfset.Action_2 = off.TempOffsets.Action_2;
-                                        tempOfset.Action_3 = off.TempOffsets.Action_3;
-                                        tempOfset.InviteCount = off.TempOffsets.InviteCount;
-                                        tempOfset.InviteStruct = off.TempOffsets.InviteStruct;
-                                        tempOfset.ChatStart = off.TempOffsets.ChatStart;
-                                        tempOfset.ChatNumber = off.TempOffsets.ChatNumber;
-                                        tempOfset.InviteWidPlayer = off.TempOffsets.InviteWidPlayer;
-                                        tempOfset.InviteWidParty = off.TempOffsets.InviteWidParty;
-                                        tempOfset.OffsetToGameAdress = off.TempOffsets.OffsetToGameAdress;
-                                        tempOfset.OffsetToPersStruct = off.TempOffsets.OffsetToPersStruct;
-                                        tempOfset.OffsetToParty = off.TempOffsets.OffsetToParty;
-                                        tempOfset.OffsetToCountParty = off.TempOffsets.OffsetToCountParty;
-                                        tempOfset.OffsetToName = off.TempOffsets.OffsetToName;
-                                        tempOfset.OffsetToClassID = off.TempOffsets.OffsetToClassID;
-                                        tempOfset.OffsetToMiningState = off.TempOffsets.OffsetToMiningState;
-                                        tempOfset.OffsetToWidWin_QuickAction = off.TempOffsets.OffsetToWidWin_QuickAction;
-                                        tempOfset.OffsetToX = off.TempOffsets.OffsetToX;
-                                        tempOfset.OffsetToY = off.TempOffsets.OffsetToY;
-                                        tempOfset.OffsetToZ = off.TempOffsets.OffsetToZ;
-                                        tempOfset.OffsetToWalkMode = off.TempOffsets.OffsetToWalkMode;
-                                        tempOfset.OffsetToWid = off.TempOffsets.OffsetToWid;
-                                        tempOfset.OffsetToTargetWid = off.TempOffsets.OffsetToTargetWid;
-                                        tempOfset.OffsetToStructParty = off.TempOffsets.OffsetToStructParty;
-                                        tempOfset.OffsetsLocationName_0 = off.TempOffsets.OffsetsLocationName_0;
-                                        tempOfset.OffsetsLocationName_1 = off.TempOffsets.OffsetsLocationName_1;
-                                        tempOfset.OffsetsLocationName_2 = off.TempOffsets.OffsetsLocationName_2;
-                                        tempOfset.OffsetsLocationName_3 = off.TempOffsets.OffsetsLocationName_3;
-                                        tempOfset.OffsetsLocationName_4 = off.TempOffsets.OffsetsLocationName_4;
-                                        tempOfset.OffsetToSkillsCount = off.TempOffsets.OffsetToSkillsCount;
-                                        tempOfset.OffsetToSkillsArray = off.TempOffsets.OffsetToSkillsArray;
-                                        tempOfset.OffsetToCurrentSkill = off.TempOffsets.OffsetToCurrentSkill;
-                                        tempOfset.OffsetToIdSkill = off.TempOffsets.OffsetToIdSkill;
-                                        tempOfset.OffsetToCdSkill = off.TempOffsets.OffsetToCdSkill;
-                                        tempOfset.OffsetToCountBufs = off.TempOffsets.OffsetToCountBufs;
-                                        tempOfset.OffsetToBufsArray = off.TempOffsets.OffsetToBufsArray;
-                                        tempOfset.OffsetToHashTables = off.TempOffsets.OffsetToHashTables;
-                                        tempOfset.OffsetToMobsStruct = off.TempOffsets.OffsetToMobsStruct;
-                                        tempOfset.OffsetToBeginMobsStruct = off.TempOffsets.OffsetToBeginMobsStruct;
-                                        tempOfset.OffsetToMobsCount = off.TempOffsets.OffsetToMobsCount;
-                                        tempOfset.OffsetToMobName = off.TempOffsets.OffsetToMobName;
-                                        tempOfset.OffsetToMobWid = off.TempOffsets.OffsetToMobWid;
-                                        tempOfset.OffsetToPlayersStruct = off.TempOffsets.OffsetToPlayersStruct;
-                                        tempOfset.OffsetToBeginPlayersStruct = off.TempOffsets.OffsetToBeginPlayersStruct;
-                                        tempOfset.OffsetToPlayersCount = off.TempOffsets.OffsetToPlayersCount;
-                                        tempOfset.MsgId = off.TempOffsets.MsgId;
-                                        tempOfset.MsgType = off.TempOffsets.MsgType;
-                                        tempOfset.Msg_form1 = off.TempOffsets.Msg_form1;
-                                        tempOfset.Msg_form2 = off.TempOffsets.Msg_form2;
-                                        tempOfset.MsgWid = off.TempOffsets.MsgWid;
-                                        tempOfset.Invent_struct = off.TempOffsets.Invent_struct;
-                                        tempOfset.Invent_struct_2 = off.TempOffsets.Invent_struct_2;
-                                        tempOfset.CellsCount = off.TempOffsets.CellsCount;
-                                        tempOfset.ItemInCellType = off.TempOffsets.ItemInCellType;
-                                        tempOfset.ItemInCellID = off.TempOffsets.ItemInCellID;
-                                        tempOfset.ItemInCellCount = off.TempOffsets.ItemInCellCount;
-                                        tempOfset.ItemInCellPrice = off.TempOffsets.ItemInCellPrice;
-                                        tempOfset.ItemInCellName = off.TempOffsets.ItemInCellName;
+                                if (offsetsFromDb == null) return;
 
-                                        dbOffsets.Entry(tempOfset).State = EntityState.Modified;
-                                        dbOffsets.SaveChanges();
-                                    }
-                                    else
+                                OffsetWindow off = new OffsetWindow(offsetsFromDb.Clone());
+                                if (off.ShowDialog() == true)
+                                {
+                                    Offset tempOfset = new Offset();
+                                    tempOfset = dbOffsets.Offsets.Find(off.TempOffsets.Id);
+                                    if (tempOfset != null)
                                     {
-                                        dbOffsets.Offsets.Add(off.TempOffsets);
-                                        dbOffsets.SaveChanges();
+                                        if (tempOfset.Version == off.TempOffsets.Version)
+                                        {
+                                            tempOfset.BA = off.TempOffsets.BA;
+                                            tempOfset.GA = off.TempOffsets.GA;
+                                            tempOfset.Version = off.TempOffsets.Version;
+                                            tempOfset.GuiAdd = off.TempOffsets.GuiAdd;
+                                            tempOfset.SendPacket = off.TempOffsets.SendPacket;
+                                            tempOfset.AutoAttack = off.TempOffsets.AutoAttack;
+                                            tempOfset.UseSkill = off.TempOffsets.UseSkill;
+                                            tempOfset.Action_1 = off.TempOffsets.Action_1;
+                                            tempOfset.Action_2 = off.TempOffsets.Action_2;
+                                            tempOfset.Action_3 = off.TempOffsets.Action_3;
+                                            tempOfset.InviteCount = off.TempOffsets.InviteCount;
+                                            tempOfset.InviteStruct = off.TempOffsets.InviteStruct;
+                                            tempOfset.ChatStart = off.TempOffsets.ChatStart;
+                                            tempOfset.ChatNumber = off.TempOffsets.ChatNumber;
+                                            tempOfset.InviteWidPlayer = off.TempOffsets.InviteWidPlayer;
+                                            tempOfset.InviteWidParty = off.TempOffsets.InviteWidParty;
+                                            tempOfset.OffsetToGameAdress = off.TempOffsets.OffsetToGameAdress;
+                                            tempOfset.OffsetToPersStruct = off.TempOffsets.OffsetToPersStruct;
+                                            tempOfset.OffsetToParty = off.TempOffsets.OffsetToParty;
+                                            tempOfset.OffsetToCountParty = off.TempOffsets.OffsetToCountParty;
+                                            tempOfset.OffsetToName = off.TempOffsets.OffsetToName;
+                                            tempOfset.OffsetToClassID = off.TempOffsets.OffsetToClassID;
+                                            tempOfset.OffsetToMiningState = off.TempOffsets.OffsetToMiningState;
+                                            tempOfset.OffsetToWidWin_QuickAction = off.TempOffsets.OffsetToWidWin_QuickAction;
+                                            tempOfset.OffsetToX = off.TempOffsets.OffsetToX;
+                                            tempOfset.OffsetToY = off.TempOffsets.OffsetToY;
+                                            tempOfset.OffsetToZ = off.TempOffsets.OffsetToZ;
+                                            tempOfset.OffsetToWalkMode = off.TempOffsets.OffsetToWalkMode;
+                                            tempOfset.OffsetToWid = off.TempOffsets.OffsetToWid;
+                                            tempOfset.OffsetToTargetWid = off.TempOffsets.OffsetToTargetWid;
+                                            tempOfset.OffsetToStructParty = off.TempOffsets.OffsetToStructParty;
+                                            tempOfset.OffsetsLocationName_0 = off.TempOffsets.OffsetsLocationName_0;
+                                            tempOfset.OffsetsLocationName_1 = off.TempOffsets.OffsetsLocationName_1;
+                                            tempOfset.OffsetsLocationName_2 = off.TempOffsets.OffsetsLocationName_2;
+                                            tempOfset.OffsetsLocationName_3 = off.TempOffsets.OffsetsLocationName_3;
+                                            tempOfset.OffsetsLocationName_4 = off.TempOffsets.OffsetsLocationName_4;
+                                            tempOfset.OffsetToSkillsCount = off.TempOffsets.OffsetToSkillsCount;
+                                            tempOfset.OffsetToSkillsArray = off.TempOffsets.OffsetToSkillsArray;
+                                            tempOfset.OffsetToCurrentSkill = off.TempOffsets.OffsetToCurrentSkill;
+                                            tempOfset.OffsetToIdSkill = off.TempOffsets.OffsetToIdSkill;
+                                            tempOfset.OffsetToCdSkill = off.TempOffsets.OffsetToCdSkill;
+                                            tempOfset.OffsetToCountBufs = off.TempOffsets.OffsetToCountBufs;
+                                            tempOfset.OffsetToBufsArray = off.TempOffsets.OffsetToBufsArray;
+                                            tempOfset.OffsetToHashTables = off.TempOffsets.OffsetToHashTables;
+                                            tempOfset.OffsetToMobsStruct = off.TempOffsets.OffsetToMobsStruct;
+                                            tempOfset.OffsetToBeginMobsStruct = off.TempOffsets.OffsetToBeginMobsStruct;
+                                            tempOfset.OffsetToMobsCount = off.TempOffsets.OffsetToMobsCount;
+                                            tempOfset.OffsetToMobName = off.TempOffsets.OffsetToMobName;
+                                            tempOfset.OffsetToMobWid = off.TempOffsets.OffsetToMobWid;
+                                            tempOfset.OffsetToPlayersStruct = off.TempOffsets.OffsetToPlayersStruct;
+                                            tempOfset.OffsetToBeginPlayersStruct = off.TempOffsets.OffsetToBeginPlayersStruct;
+                                            tempOfset.OffsetToPlayersCount = off.TempOffsets.OffsetToPlayersCount;
+                                            tempOfset.MsgId = off.TempOffsets.MsgId;
+                                            tempOfset.MsgType = off.TempOffsets.MsgType;
+                                            tempOfset.Msg_form1 = off.TempOffsets.Msg_form1;
+                                            tempOfset.Msg_form2 = off.TempOffsets.Msg_form2;
+                                            tempOfset.MsgWid = off.TempOffsets.MsgWid;
+                                            tempOfset.Invent_struct = off.TempOffsets.Invent_struct;
+                                            tempOfset.Invent_struct_2 = off.TempOffsets.Invent_struct_2;
+                                            tempOfset.CellsCount = off.TempOffsets.CellsCount;
+                                            tempOfset.ItemInCellType = off.TempOffsets.ItemInCellType;
+                                            tempOfset.ItemInCellID = off.TempOffsets.ItemInCellID;
+                                            tempOfset.ItemInCellCount = off.TempOffsets.ItemInCellCount;
+                                            tempOfset.ItemInCellPrice = off.TempOffsets.ItemInCellPrice;
+                                            tempOfset.ItemInCellName = off.TempOffsets.ItemInCellName;
+
+                                            dbOffsets.Entry(tempOfset).State = EntityState.Modified;
+                                            dbOffsets.SaveChanges();
+                                        }
+                                        else
+                                        {
+                                            dbOffsets.Offsets.Add(off.TempOffsets);
+                                            dbOffsets.SaveChanges();
+                                        }
+
                                     }
-                                    
                                 }
                             }
-                            
+                            catch (Exception ex)
+                            {
+                                CalcMethods.ViewException(ex.Message);
+                            }
                         }));
             }
         }
@@ -325,10 +352,17 @@ namespace Nirvana.ViewModels
                     (deleteAccountCommand = new RelayCommand(
                         (selectedItem) =>
                         {
-                            if (selectedItem == null) return;
-                            Account acc = selectedItem as Account;
-                            dbAccounts.Accounts.Remove(acc);
-                            dbAccounts.SaveChanges();
+                            try
+                            {
+                                if (selectedItem == null) return;
+                                Account acc = selectedItem as Account;
+                                dbAccounts.Accounts.Remove(acc);
+                                dbAccounts.SaveChanges();
+                            }
+                            catch (Exception ex)
+                            {
+                                CalcMethods.ViewException(ex.Message);
+                            }
                         }));
             }
         }
@@ -341,12 +375,19 @@ namespace Nirvana.ViewModels
                     (addAccountCommand = new RelayCommand(
                         (o) =>
                         {
-                            AddAccount aw = new AddAccount(new Account());
-                            if (aw.ShowDialog() == true)
+                            try
                             {
-                                Account acc = aw.Account;
-                                dbAccounts.Accounts.Add(acc);
-                                dbAccounts.SaveChanges();
+                                AddAccount aw = new AddAccount(new Account());
+                                if (aw.ShowDialog() == true)
+                                {
+                                    Account acc = aw.Account;
+                                    dbAccounts.Accounts.Add(acc);
+                                    dbAccounts.SaveChanges();
+                                }
+                            }
+                            catch (Exception ex)
+                            {
+                                CalcMethods.ViewException(ex.Message);
                             }
                         }));
             }
@@ -360,24 +401,32 @@ namespace Nirvana.ViewModels
                     (loginSettingsOpneCommand = new RelayCommand(
                         (selectedItem) =>
                         {
-                            LoginSettings ls = new LoginSettings(settings);
-                            if (ls.ShowDialog() == true)
+                            try
                             {
-                                ApplySettings();
-                                Setting set = new Setting();
-                                set = dbSettings.Settings.Find(ls.setting.ID);
-                                if (set != null)
+                                LoginSettings ls = new LoginSettings(settings);
+                                if (ls.ShowDialog() == true)
                                 {
-                                    set.Downloader = ls.setting.Downloader;
-                                    set.UserId_1 = ls.setting.UserId_1;
-                                    set.UserId_2 = ls.setting.UserId_2;
-                                    set.Serialnumber = ls.setting.Serialnumber;
+                                    ApplySettings();
+                                    Setting set = new Setting();
+                                    set = dbSettings.Settings.Find(ls.setting.ID);
+                                    if (set != null)
+                                    {
+                                        set.Downloader = ls.setting.Downloader;
+                                        set.UserId_1 = ls.setting.UserId_1;
+                                        set.UserId_2 = ls.setting.UserId_2;
+                                        set.Serialnumber = ls.setting.Serialnumber;
+                                        set.Filepath = ls.setting.Filepath;
 
-                                    dbSettings.Entry(set).State = EntityState.Modified;
-                                    dbSettings.SaveChanges();
+                                        dbSettings.Entry(set).State = EntityState.Modified;
+                                        dbSettings.SaveChanges();
+                                        ApplySettings();
+                                    }
                                 }
                             }
-                            
+                            catch (Exception ex)
+                            {
+                                CalcMethods.ViewException(ex.Message);
+                            }
                         }));
             }
         }
@@ -390,9 +439,16 @@ namespace Nirvana.ViewModels
                     (playCommand = new RelayCommand(
                         async (selectedItem) =>
                         {
-                            if (selectedItem == null) return;
-                            Account acc = selectedItem as Account;
-                            await Loging.AuthAsync(acc, dbAccounts);
+                            try
+                            {
+                                if (selectedItem == null) return;
+                                Account acc = selectedItem as Account;
+                                await Loging.AuthAsync(acc, dbAccounts);
+                            }
+                            catch (Exception ex)
+                            {
+                                CalcMethods.ViewException(ex.Message);
+                            }
                         }));
             }
         }
@@ -405,13 +461,20 @@ namespace Nirvana.ViewModels
                     (taskBarCommand = new RelayCommand(
                         (o) =>
                         {
-                            if (o as MainWindow != null)
+                            try
                             {
-                                if (((MainWindow)o).Visibility == Visibility.Hidden)
-                                    ((MainWindow)o).Show();
-                                else
-                                    ((MainWindow)o).Hide();
+                                if (o as MainWindow != null)
+                                {
+                                    if (((MainWindow)o).Visibility == Visibility.Hidden)
+                                        ((MainWindow)o).Show();
+                                    else
+                                        ((MainWindow)o).Hide();
+                                }
                             }
+                            catch (Exception ex)
+                            {
+                                CalcMethods.ViewException(ex.Message);
+                            }        
                         }));
             }
         }
@@ -424,7 +487,14 @@ namespace Nirvana.ViewModels
                     (saveSettingsCommand = new RelayCommand(
                         (o) =>
                         {
-                            Serializable();
+                            try
+                            {
+                                Serializable();
+                            }
+                            catch (Exception ex)
+                            {
+                                CalcMethods.ViewException(ex.Message);
+                            }
                         }));
             }
         }
@@ -437,39 +507,46 @@ namespace Nirvana.ViewModels
                     (startAndStopButtonCommand = new RelayCommand(
                         (o) =>
                         {
-                            Button btn = o as Button;
-                            if (btn == null) return;
-
-                            switch (btn.Content.ToString())
+                            try
                             {
-                                case "Старт":
-                                    if (ListClients.work_collection[10] != null && ListClients.work_collection[0] != null)
-                                        foreach (My_Windows mw in ListClients.work_collection)
-                                        {
-                                            if (mw != null )
+                                Button btn = o as Button;
+                                if (btn == null) return;
+
+                                switch (btn.Content.ToString())
+                                {
+                                    case "Старт":
+                                        if (ListClients.work_collection[10] != null && ListClients.work_collection[0] != null)
+                                            foreach (My_Windows mw in ListClients.work_collection)
                                             {
-                                                mw.StateThread = StateEnum.run;
-                                                if (!mw.BackgroundWorker5.IsBusy)
-                                                    mw.BackgroundWorker5.RunWorkerAsync();
-                                                btn.Content = "Стоп";
+                                                if (mw != null)
+                                                {
+                                                    mw.StateThread = StateEnum.run;
+                                                    if (!mw.BackgroundWorker5.IsBusy)
+                                                        mw.BackgroundWorker5.RunWorkerAsync();
+                                                    btn.Content = "Стоп";
+                                                }
+                                            }
+                                        break;
+                                    case "Стоп":
+                                        for (int i = 0; i < ListClients.work_collection.Count(); i++)
+                                        {
+                                            if (ListClients.work_collection[i] != null)
+                                            {
+                                                ListClients.work_collection[i].StateThread = StateEnum.stop;
+                                                if (ListClients.work_collection[i].BackgroundWorker5.IsBusy)
+                                                    ListClients.work_collection[i].BackgroundWorker5.CancelAsync();
                                             }
                                         }
-                                    break;
-                                case "Стоп":
-                                    for (int i = 0; i<ListClients.work_collection.Count(); i++)
-                                    {
-                                        if (ListClients.work_collection[i] != null)
-                                        {
-                                            ListClients.work_collection[i].StateThread = StateEnum.stop;
-                                            if (ListClients.work_collection[i].BackgroundWorker5.IsBusy)
-                                                ListClients.work_collection[i].BackgroundWorker5.CancelAsync();
-                                        }
-                                    }
-                                    btn.Content = "Старт";
-                                    break;
-                                default:
-                                    break;
+                                        btn.Content = "Старт";
+                                        break;
+                                    default:
+                                        break;
+                                }
                             }
+                            catch (Exception ex)
+                            {
+                                CalcMethods.ViewException(ex.Message);
+                            } 
                         }));
             }
         }
@@ -482,10 +559,17 @@ namespace Nirvana.ViewModels
                     (dragMoveCommand = new RelayCommand(
                         (headWindow) =>
                         {
-                            MainWindow hw = headWindow as MainWindow;
-                            if (headWindow == null) return;
+                            try
+                            {
+                                MainWindow hw = headWindow as MainWindow;
+                                if (headWindow == null) return;
 
-                            hw.DragMove();
+                                hw.DragMove();
+                            }
+                            catch (Exception ex)
+                            {
+                                CalcMethods.ViewException(ex.Message);
+                            }
                         }));
             }
         }
@@ -497,32 +581,38 @@ namespace Nirvana.ViewModels
                 return refreshClientCollectionCommand ??
                     (refreshClientCollectionCommand = new RelayCommand(
                         (o) => {
-                            MainWindow wnd = o as MainWindow;
-                            if (wnd == null) return;
-
-                            ListClients.Count_Clients();
-
-                            for (int i = 0; i < ListClients.exList.Count(); i++)
+                            try
                             {
-                                ListClients.exList[i] = null;
-                            }
-                            foreach (ComboBox box in comboBoxes)
-                                box.SelectedIndex = -1;
+                                MainWindow wnd = o as MainWindow;
+                                if (wnd == null) return;
 
-                            for (int i = 0; i < ListClients.work_collection.Count(); i++)
-                            {
-                                if (ListClients.work_collection[i] != null)
-                                    if (ListClients.work_collection[i].BackgroundWorker5.IsBusy)
-                                    {
-                                        ListClients.work_collection[i].StateThread = StateEnum.stop;
-                                        ListClients.work_collection[i].BackgroundWorker5.CancelAsync();
-                                    }
-                                ListClients.work_collection[i] = null;
-                            }
-                            wnd.start_stop_btn.Content = "Старт";
+                                ListClients.CanRefresh = false;
+                                ListClients.Count_Clients();
+                                for (int i = 0; i < ListClients.exList.Count(); i++)
+                                {
+                                    ListClients.exList[i] = null;
+                                }
+                                foreach (ComboBox box in comboBoxes)
+                                    box.SelectedIndex = -1;
 
-                            RefreshComboboxes(wnd);
-                        }));
+                                for (int i = 0; i < ListClients.work_collection.Count(); i++)
+                                {
+                                    if (ListClients.work_collection[i] != null)
+                                        if (ListClients.work_collection[i].BackgroundWorker5.IsBusy)
+                                        {
+                                            ListClients.work_collection[i].StateThread = StateEnum.stop;
+                                            ListClients.work_collection[i].BackgroundWorker5.CancelAsync();
+                                        }
+                                    ListClients.work_collection[i] = null;
+                                }
+                                wnd.start_stop_btn.Content = "Старт";
+
+                                RefreshComboboxes(wnd);
+                            }
+                            catch (Exception ex) { CalcMethods.ViewException(ex.Message); }
+                            finally { ListClients.CanRefresh = true; }
+                            
+                        }, (o) => { return ListClients.CanRefresh; }));
             }
         }
         //команды для смены флагов твинков
@@ -534,9 +624,16 @@ namespace Nirvana.ViewModels
                     (changeFlagSCommand = new RelayCommand(
                         (o) =>
                         {
-                            My_Windows mw = o as My_Windows;
-                            if (mw == null) return;
-                            mw.ChatRead.S = !mw.ChatRead.S;
+                            try
+                            {
+                                My_Windows mw = o as My_Windows;
+                                if (mw == null) return;
+                                mw.ChatRead.S = !mw.ChatRead.S;
+                            }
+                            catch (Exception ex)
+                            {
+                                CalcMethods.ViewException(ex.Message);
+                            }
                         }));
             }
         }
@@ -548,9 +645,16 @@ namespace Nirvana.ViewModels
                     (changeFlagBCommand = new RelayCommand(
                         (o) =>
                         {
-                            My_Windows mw = o as My_Windows;
-                            if (mw == null) return;
-                            mw.ChatRead.B = !mw.ChatRead.B;
+                            try
+                            {
+                                My_Windows mw = o as My_Windows;
+                                if (mw == null) return;
+                                mw.ChatRead.B = !mw.ChatRead.B;
+                            }
+                            catch (Exception ex)
+                            {
+                                CalcMethods.ViewException(ex.Message);
+                            }
                         }));
             }
         }
@@ -562,9 +666,16 @@ namespace Nirvana.ViewModels
                     (changeFlagDCommand = new RelayCommand(
                         (o) =>
                         {
-                            My_Windows mw = o as My_Windows;
-                            if (mw == null) return;
-                            mw.ChatRead.D = !mw.ChatRead.D;
+                            try
+                            {
+                                My_Windows mw = o as My_Windows;
+                                if (mw == null) return;
+                                mw.ChatRead.D = !mw.ChatRead.D;
+                            }
+                            catch (Exception ex)
+                            {
+                                CalcMethods.ViewException(ex.Message);
+                            }
                         }));
             }
         }
@@ -578,7 +689,7 @@ namespace Nirvana.ViewModels
             }
             catch
             {
-                MessageBox.Show("Пока не сохранено настроек");
+                CalcMethods.ViewException("Пока не сохранено настроек");
                 CheckBoxSettings = new MySettings();
             }
             finally
@@ -590,29 +701,51 @@ namespace Nirvana.ViewModels
 
         private void Serializable()
         {
-            using (FileStream fs = new FileStream(Environment.CurrentDirectory + "\\settings.xml", FileMode.Truncate))
+            try
             {
-                formatter.Serialize(fs, CheckBoxSettings);
-                fs.Close();
+                using (FileStream fs = new FileStream(Environment.CurrentDirectory + "\\settings.xml", FileMode.Truncate))
+                {
+                    formatter.Serialize(fs, CheckBoxSettings);
+                }
             }
+            catch (Exception ex)
+            {
+                CalcMethods.ViewException(ex.Message);
+            }
+            
         }
 
         //метод обновления комбобоксов
         private void RefreshComboboxes(MainWindow wnd)
         {
-            if (wnd == null) return;
+            try
+            {
+                if (wnd == null) return;
 
-            foreach(ComboBox box in comboBoxes)
-                if (box.ItemsSource is ICollectionView)
-                    (box.ItemsSource as ICollectionView).Refresh();
+                foreach (ComboBox box in comboBoxes)
+                    if (box.ItemsSource is ICollectionView)
+                        (box.ItemsSource as ICollectionView).Refresh();
+            }
+            catch (Exception ex)
+            {
+                CalcMethods.ViewException(ex.Message);
+            }
         }
 
         //применяем настройки
         private void ApplySettings()
         {
-            Loging.Downloader = settings.Downloader;
-            Loging.UserId_1 = settings.UserId_1;
-            Loging.UserId_2 = settings.UserId_2;
+            try
+            {
+                Loging.Downloader = settings.Downloader;
+                Loging.UserId_1 = settings.UserId_1;
+                Loging.UserId_2 = settings.UserId_2;
+                Loging.PathToClient = settings.Filepath;
+            }
+            catch (Exception ex)
+            {
+                CalcMethods.ViewException(ex.Message);
+            }
         }
 
         //формат офсетов (String -> Int32)
@@ -690,7 +823,7 @@ namespace Nirvana.ViewModels
             }
             catch (Exception ex)
             {
-                MessageBox.Show(ex.Message);
+                CalcMethods.ViewException(ex.Message);
             }
             
         }
@@ -707,21 +840,28 @@ namespace Nirvana.ViewModels
         {
             dispatcher.Invoke (DispatcherPriority.Background, new Action(() =>
                              {
-                                 lock (thread_object)
+                                 try
                                  {
-                                     string tray_text = "";
-                                     foreach (FormatText log in text_log)
-                                         tray_text = log.Text != null ? log.Text : "пустое сообщение";
+                                     lock (thread_object)
+                                     {
+                                         string tray_text = "";
+                                         foreach (FormatText log in text_log)
+                                             tray_text = log.Text != null ? log.Text : "пустое сообщение";
 
-                                     if (FormatText.baloon_msg.Count() < 5)
-                                     {
-                                         FormatText.baloon_msg.Add(new FormatText(tray_text, Brushes.Black, 13, text_log[0].Type));
+                                         if (FormatText.baloon_msg.Count() < 5)
+                                         {
+                                             FormatText.baloon_msg.Add(new FormatText(tray_text, Brushes.Black, 13, text_log[0].Type));
+                                         }
+                                         else
+                                         {
+                                             FormatText.baloon_msg.RemoveAt(0);
+                                             FormatText.baloon_msg.Add(new FormatText(tray_text, Brushes.Black, 13, text_log[0].Type));
+                                         }
                                      }
-                                     else
-                                     {
-                                         FormatText.baloon_msg.RemoveAt(0);
-                                         FormatText.baloon_msg.Add(new FormatText(tray_text, Brushes.Black, 13, text_log[0].Type));
-                                     }
+                                 }
+                                 catch (Exception ex)
+                                 {
+                                     CalcMethods.ViewException(ex.Message);
                                  }
                              }));
         }
@@ -734,31 +874,38 @@ namespace Nirvana.ViewModels
                 return headComboboxSelectionChangedCommand ??
                     (headComboboxSelectionChangedCommand = new RelayCommand(
                         (o) => {
-                            ComboBox box = o as ComboBox;
-                            if (box == null) return;
-
-                            Int32 indexBox = comboBoxes.IndexOf(box);
-                            if (box.SelectedIndex > -1)
+                            try
                             {
-                                if (ListClients.work_collection[indexBox] != null)
+                                ComboBox box = o as ComboBox;
+                                if (box == null) return;
+
+                                Int32 indexBox = comboBoxes.IndexOf(box);
+                                if (box.SelectedIndex > -1)
                                 {
-                                    if (ListClients.work_collection[indexBox].BackgroundWorker5.IsBusy)
-                                        ListClients.work_collection[indexBox].BackgroundWorker5.CancelAsync();
-                                    ListClients.work_collection[indexBox].StateThread = StateEnum.stop;
-                                    ListClients.work_collection[indexBox].Rule = 0;
+                                    if (ListClients.work_collection[indexBox] != null)
+                                    {
+                                        if (ListClients.work_collection[indexBox].BackgroundWorker5.IsBusy)
+                                            ListClients.work_collection[indexBox].BackgroundWorker5.CancelAsync();
+                                        ListClients.work_collection[indexBox].StateThread = StateEnum.stop;
+                                        ListClients.work_collection[indexBox].Rule = 0;
+                                    }
+                                    ListClients.exList[indexBox] = ((My_Windows)box.SelectedItem).Name;
+                                    ListClients.work_collection[indexBox] = (My_Windows)(box.SelectedItem);
+                                    ListClients.work_collection[indexBox].Rule = (indexBox == 0) ? 2 : ((indexBox == 10) ? 1 : 0);
+                                    ListClients.work_collection[indexBox].ChatRead = (indexBox == 0) ?
+                                    new ChatReader(ListClients.work_collection[indexBox]) :
+                                    new ChatReader(ListClients.work_collection[indexBox],
+                                    CheckBoxSettings.GetValueCheckBox(1, indexBox), CheckBoxSettings.GetValueCheckBox(2, indexBox), CheckBoxSettings.GetValueCheckBox(3, indexBox));
+                                    ListClients.work_collection[indexBox].Log_event += Logging;
                                 }
-                                ListClients.exList[indexBox] = ((My_Windows)box.SelectedItem).Name;
-                                ListClients.work_collection[indexBox] = (My_Windows)(box.SelectedItem);
-                                ListClients.work_collection[indexBox].Rule = (indexBox == 0) ? 2 : ((indexBox == 10) ? 1 : 0);
-                                ListClients.work_collection[indexBox].ChatRead = (indexBox == 0) ?
-                                new ChatReader(ListClients.work_collection[indexBox]):
-                                new ChatReader(ListClients.work_collection[indexBox],
-                                CheckBoxSettings.GetValueCheckBox(1, indexBox), CheckBoxSettings.GetValueCheckBox(2, indexBox), CheckBoxSettings.GetValueCheckBox(3, indexBox));
-                                ListClients.work_collection[indexBox].Log_event += Logging;
+                                foreach (ComboBox cmbx in comboBoxes.Where(p => p != box))
+                                    if (cmbx.ItemsSource is ICollectionView)
+                                        (cmbx.ItemsSource as ICollectionView).Refresh();
                             }
-                            foreach (ComboBox cmbx in comboBoxes.Where(p => p != box))
-                                if(cmbx.ItemsSource is ICollectionView)
-                                    (cmbx.ItemsSource as ICollectionView).Refresh();
+                            catch (Exception ex)
+                            {
+                                CalcMethods.ViewException(ex.Message);
+                            }
                         }
                     ));
             }

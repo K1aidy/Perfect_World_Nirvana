@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.Win32;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -24,7 +25,12 @@ namespace Nirvana.Views
         public LoginSettings(Models.Login.Setting settings)
         {
             InitializeComponent();
-            this.setting = new Models.Login.Setting { ID = settings.ID, Downloader = settings.Downloader, Serialnumber = settings.Serialnumber, UserId_1 = settings.UserId_1, UserId_2 = settings.UserId_2 };
+            this.setting = new Models.Login.Setting { ID = settings.ID,
+                                                      Downloader = settings.Downloader,
+                                                      Serialnumber = settings.Serialnumber,
+                                                      UserId_1 = settings.UserId_1,
+                                                      UserId_2 = settings.UserId_2,
+                                                      Filepath = settings.Filepath};
             this.DataContext = setting;
         }
 
@@ -39,6 +45,16 @@ namespace Nirvana.Views
         private void button1_Click(object sender, RoutedEventArgs e)
         {
             DialogResult = false;
+        }
+
+        private void Search_Click(object sender, RoutedEventArgs e)
+        {
+            {
+                OpenFileDialog ofd = new OpenFileDialog { InitialDirectory = Environment.CurrentDirectory, Filter = "Клиент|elementclient.exe|Все файлы|*.*" };
+
+                if (ofd.ShowDialog() == true)
+                    setting.Filepath = ofd.FileName.Replace("elementclient.exe", String.Empty);
+            }
         }
     }
 }

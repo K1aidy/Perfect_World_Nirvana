@@ -136,7 +136,7 @@ namespace Nirvana.Models.BotModels
                             && temp)
                         {
                             mw.Logging(new FormatText(mw.Name, Brushes.Red, 14, 2),
-                                        new FormatText(message_1, Brushes.Black, 13, 2));
+                                        new FormatText(message_1, Brushes.Black, 14, 2));
                             //все боты выходят из пати (если они в пати)
                             SimonSayMethods.QuitFromParty();
                             //пересборщик кидает всем ботам пати

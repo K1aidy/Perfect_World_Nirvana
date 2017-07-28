@@ -82,6 +82,21 @@ namespace Nirvana.Models.Login
             }
         }
 
+        String filepath;
+        public String Filepath
+        {
+            get
+            {
+                return filepath;
+            }
+
+            set
+            {
+                filepath = value;
+                OnPropertyChanged("Filepath");
+            }
+        }
+
         public event PropertyChangedEventHandler PropertyChanged;
         public void OnPropertyChanged([CallerMemberName]string prop = "")
         {
