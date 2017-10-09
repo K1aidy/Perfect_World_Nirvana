@@ -8,6 +8,7 @@ using System.Diagnostics;
 using System.IO;
 using System.Net;
 using System.Text.RegularExpressions;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
 
@@ -204,17 +205,63 @@ namespace Nirvana.Models.Login
                 Process process = new Process();
                 if (!File.Exists(PathToClient + "elementclient.exe"))
                     throw new Exception("Не указан путь к elementclient.exe в настройках!");
-                    process.StartInfo.WorkingDirectory = PathToClient;
-                    process.StartInfo.FileName = "elementclient.exe";
-                    process.StartInfo.Arguments = String.Format("startbypatcher user:{0} _user:{1} token2:{2}", userId_1, userId_2, token);
-                    process.StartInfo.Verb = "runas";
-                    process.Start();
 
+                process.StartInfo.WorkingDirectory = PathToClient;
+                process.StartInfo.FileName = "elementclient.exe";
+                process.StartInfo.Arguments = String.Format("startbypatcher user:{0} _user:{1} token2:{2}", userId_1, userId_2, token);
+                process.StartInfo.Verb = "runas";
+                process.Start();
+                //await EntranceToGame(process.Id, user);
+                //await Checkresourses(process.Id, user, db);
                 #endregion
             }
             catch (Exception ex)
             {
                 CalcMethods.ViewException(ex.Message);
+            }
+        }
+
+        private static async Task Checkresourses(Int32 processId, Account user, AccountContext db)
+        {
+            IntPtr oph = IntPtr.Zero;
+            try
+            {
+                await Task.Delay(3000);
+                //открываем процесс для чтения и записи
+                oph = WinApi.OpenProcess(WinApi.ProcessAccessFlags.All, false, processId);
+                //заходим в дом
+                Int32[] addresses = CalcMethods.CalcControlAddress(oph, "Win_Main6", "Btn_EnterHome", 1);
+                Injects.GUI_Inject(addresses[0], addresses[1], oph);
+                //ждем, пока персонаж не зайдет в дом
+                String location = String.Empty;
+                Int32 countTeleportTemp = 0;
+                do
+                {
+                    await Task.Delay(1000);
+                    location = CalcMethods.ReadString(oph,
+                                Offsets.BaseAdress, Offsets.OffsetsLocationName);
+                    countTeleportTemp++;
+                    if (countTeleportTemp > 60) throw new Exception("Не удалось зайти в дом");
+                }
+                while (!location.Contains("Заоблачный мир"));
+
+                Int32 wid = CalcMethods.MobSearch(oph, "Ткацкая мастерская");
+                //считываем количество ресурсов в доме
+                user.Food = Int32.Parse(CalcMethods.ReadString(oph, CalcMethods.CalcControlAddress(oph, "Win_HomeMain", "Txt_4", 2)[2] + 0xB8, new int[] { 0 }));
+                user.Iron = Int32.Parse(CalcMethods.ReadString(oph, CalcMethods.CalcControlAddress(oph, "Win_HomeMain", "Txt_2", 2)[2] + 0xB8, new int[] { 0 }));
+                user.Tree = Int32.Parse(CalcMethods.ReadString(oph, CalcMethods.CalcControlAddress(oph, "Win_HomeMain", "Txt_1", 2)[2] + 0xB8, new int[] { 0 }));
+                user.Rock = Int32.Parse(CalcMethods.ReadString(oph, CalcMethods.CalcControlAddress(oph, "Win_HomeMain", "Txt_0", 2)[2] + 0xB8, new int[] { 0 }));
+                user.Cloth = Int32.Parse(CalcMethods.ReadString(oph, CalcMethods.CalcControlAddress(oph, "Win_HomeMain", "Txt_3", 2)[2] + 0xB8, new int[] { 0 }));
+                //сохраняем иземенения
+                SaveAccounts(user, db);
+            }
+            catch (Exception ex)
+            {
+                CalcMethods.ViewException(ex.Message);
+            }
+            finally
+            {
+                WinApi.CloseHandle(oph);
             }
         }
 
@@ -233,6 +280,11 @@ namespace Nirvana.Models.Login
                     acc.Password = user.Password;
                     acc.Server = user.Server;
                     acc.TsaToken = user.TsaToken;
+                    acc.Food = user.Food;
+                    acc.Iron = user.Iron;
+                    acc.Tree = user.Tree;
+                    acc.Rock = user.Rock;
+                    acc.Cloth = user.Cloth;
                     db.Entry(acc).State = EntityState.Modified;
                     db.SaveChanges();
                 }
@@ -242,5 +294,139 @@ namespace Nirvana.Models.Login
                 CalcMethods.ViewException(ex.Message);
             }
         }
+
+        /// <summary>
+        /// Вход в игру
+        /// </summary>
+        /// <param name="processId"></param>
+        /// <param name="user"></param>
+        /// <returns></returns>
+        private static async Task EntranceToGame(Int32 processId, Account user)
+        {
+            try
+            {
+                //открываем процесс для чтения и записи
+                IntPtr oph = WinApi.OpenProcess(WinApi.ProcessAccessFlags.All, false, processId);
+                //дожидаемся, пока прогрузится окно, если прошла минута, то выбрасываем исключение
+                Int32 tempCount = 0;
+                Int32[] addresses;
+                do
+                {
+                    await Task.Delay(1000);
+                    tempCount++;
+                    if (tempCount > 60) throw new Exception("Проблемы с запуском окна.");
+                    addresses = CalcMethods.CalcControlAddress(oph, "Win_LoginServerList", "Lst_Server", 1);
+                }
+                while (CalcMethods.CalcByteValue(oph, addresses[0] + 0x90) != 1);
+                //находим дескриптор окна
+                IntPtr hwnd = CalcMethods.GetHandle(processId);
+                //выбираем сервер
+                addresses = CalcMethods.CalcControlAddress(oph, "Win_LoginServerList", "Lst_Server", 1);
+                for (int i = 0; i < 13; i++)
+                {
+                    if (CalcMethods.ReadString(oph, addresses[2] + 0x168, new int[] { i * 0x800, 0 }).Contains(user.Server))
+                    {
+                        if (CalcMethods.CalcByteValue(oph, addresses[2] + 0x13c) != i)
+                            CalcMethods.WriteProcessBytes(oph, i, addresses[2] + 0x13c);
+
+                        await Task.Delay(1000);
+                        //Показываем окно
+                        WinApi.ShowWindow(hwnd, WinApi.ShowWindowCommands.Show);
+                        //Разворачиваем окно
+                        WinApi.ShowWindow(hwnd, WinApi.ShowWindowCommands.Normal);
+                        //Меняем размер окна
+                        WinApi.SetWindowPos(hwnd,
+                            (IntPtr)WinApi.HWND_TOP,
+                            0, 0,
+                            (Int32)SystemParameters.WorkArea.Width,
+                            (Int32)SystemParameters.WorkArea.Height,
+                            WinApi.SetWindowPosFlags.ShowWindow);
+                        await Task.Delay(1000);
+                        addresses = CalcMethods.CalcControlAddress(oph, "Win_LoginServerListButton", "Btn_Choose", 1);
+                        WinApi.SendMessage(hwnd, 0x201, 0x1, (IntPtr)(((CalcMethods.CalcInt32Value(oph, addresses[0] + 0x9C) + CalcMethods.CalcInt32Value(oph, addresses[2] + 0x90) + 2) << 16) 
+                            | (CalcMethods.CalcInt32Value(oph, addresses[0] + 0x98) + CalcMethods.CalcInt32Value(oph, addresses[2] + 0x88) + 2) & 0xffff));
+                        WinApi.SendMessage(hwnd, 0x202, 0x1, (IntPtr)(((CalcMethods.CalcInt32Value(oph, addresses[0] + 0x9C) + CalcMethods.CalcInt32Value(oph, addresses[2] + 0x90) + 2) << 16) 
+                            | (CalcMethods.CalcInt32Value(oph, addresses[0] + 0x98) + CalcMethods.CalcInt32Value(oph, addresses[2] + 0x88) + 2) & 0xffff));
+
+                        break;
+                    }
+                }
+
+                //ждем коннекта и нажимаем "ОК" на всплывабщем информационном окне
+                addresses = CalcMethods.CalcControlAddress(oph, "Win_PwdHint", "Btn_Confirm", 1);
+                tempCount = 0;
+                do
+                {
+                    await Task.Delay(1000);
+                    tempCount++;
+                    if (tempCount > 60) throw new Exception("Проблемы с коннектом к серверу.");
+                }
+                while (CalcMethods.CalcByteValue(oph, addresses[0] + 0x90) != 1);
+                Injects.GUI_Inject(addresses[0], addresses[1], oph);
+
+                //выбираем персонажа
+                String tempName = String.Empty;
+                for (Int32 i = 1; i <= 8; i++)
+                {
+                    addresses = CalcMethods.CalcControlAddress(oph, "Win_Select", "Txt_Name" + i.ToString(), 2);
+                    tempName = CalcMethods.ReadString(oph, addresses[2] + 0xB8, new int[] { 0 });
+                    if (CalcMethods.ReadString(oph, addresses[2] + 0xB8, new int[] { 0 }).Contains(user.Nickname))
+                    {
+                        addresses = CalcMethods.CalcControlAddress(oph, "Win_Select", "Rdo_Char" + i.ToString(), 2);
+                        Injects.GUI_Inject(addresses[0], addresses[1], oph);
+                        break;
+                    }
+                }
+                await Task.Delay(1000);
+
+                //входим в игру
+                WinApi.SendMessage(hwnd, 0x0007, 0, IntPtr.Zero);
+                WinApi.PostMessage(hwnd, WinApi.WM_KEYDOWN, 13, 0);
+
+                //ждем, пока бот зайдет в игру
+                tempCount = 0;
+                do
+                {
+                    await Task.Delay(1000);
+                    tempCount++;
+                    if (tempCount > 60) throw new Exception("Проблемы с заходом в игру.");
+                }
+                while (CalcMethods.CalcByteValue(oph, 0x00E4BCCD) != 1);
+
+                WinApi.CloseHandle(oph);
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message);
+            }
+        }
+
+        /// <summary>
+        /// Выход из игры
+        /// </summary>
+        /// <param name="processId"></param>
+        /// <returns></returns>
+        private static async Task QuitOfGameAsync(Int32 processId)
+        {
+            try
+            {
+                IntPtr oph = WinApi.OpenProcess(WinApi.ProcessAccessFlags.All, false, processId);
+
+                //разлогиниваемся
+                Int32[] addresses = await CalcMethods.CalcControlAddressAsync(oph, "Win_Main3", "Btn_Quit", 1);
+                Injects.GUI_Inject(addresses[0], addresses[1], oph);
+                await Task.Delay(1000);
+                addresses = await CalcMethods.CalcControlAddressAsync(oph, "Win_Message2", "Btn_Decide", 1);
+                CalcMethods.CalcControlAddress(oph, "Win_Message2", "Btn_Decide", 1);
+                Injects.GUI_Inject(addresses[0], addresses[1], oph);
+
+                WinApi.CloseHandle(oph);
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message);
+            }
+        }
+        
     }
 }

@@ -509,7 +509,7 @@ namespace Nirvana.Models.BotModels
                         if (partyCount > 0)
                         {
                             //если счетчик людей в пати >0, то передаем пл, кидаем призыв и выходим из пати
-                            int[] temp_mas = { 0x1c, 0x34, 0x820, 0x14, 0x0, 0xc };
+                            int[] temp_mas = { Offsets.OffsetToGameAdress, Offsets.OffsetToPersStruct, Offsets.OffsetToParty, 0x14, 0x0, 0xC };
                             //если пересборщик - пл, то передаем пл 
                             Int32 temp_int = CalcMethods.ReadInt(oph, Offsets.BaseAdress, temp_mas);
                             if (CalcMethods.ReadInt(oph, Offsets.BaseAdress, temp_mas)
@@ -539,7 +539,7 @@ namespace Nirvana.Models.BotModels
         /// </summary>
         public static void Rebuf(String text)
         {
-            UseSkillMassive(ListClients.work_collection[0].My_skills_for_buf, ListClients.work_collection[0].Oph);
+            UseSkillMassive(ListClients.work_collection[0].SkillArray.My_skills_for_buf, ListClients.work_collection[0].Oph);
             Say(ListClients.work_collection[0], "!!" + text);
         }
 

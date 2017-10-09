@@ -3,6 +3,7 @@ using System.Text;
 using System.Linq;
 using System.Management;
 using Nirvana.Models.TaskBar;
+using System.Threading.Tasks;
 
 namespace Nirvana.Models.BotModels
 {
@@ -293,6 +294,21 @@ namespace Nirvana.Models.BotModels
         }
 
         /// <summary>
+        /// Узнаем адрес контрола активного окна указанного по ID процесса клиента.
+        /// Возвращает {указатель на окно, указатель на команду контрола, указатель на контрол}
+        /// </summary>
+        /// <param name="processID"></param>
+        /// <returns></returns>
+        public static Task<Int32[]> CalcControlAddressAsync(IntPtr oph, String window_name, String control_name, Byte window_lvl)
+        {
+            return Task.Run(() =>
+            {
+                return CalcControlAddress(oph, window_name, control_name, window_lvl);
+            });
+
+        }
+
+        /// <summary>
         /// Запись значения по указанной области памяти указанного процесса
         /// </summary>
         /// <param name="processID"></param>
@@ -440,6 +456,35 @@ namespace Nirvana.Models.BotModels
                     FormatText.baloon_msg.RemoveAt(0);
                     FormatText.baloon_msg.Add(new FormatText(message, System.Windows.Media.Brushes.Red, 14, 2));
                 }
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message);
+            }
+        }
+
+        /// <summary>
+        /// Получение дескриптора по ID процесса
+        /// </summary>
+        /// <param name="processId"></param>
+        /// <returns></returns>
+        public static IntPtr GetHandle(Int32 processId)
+        {
+            try
+            {
+                Int32 processIDtemp;
+                IntPtr hwnd = IntPtr.Zero;
+                while (true)
+                {
+                    //получаем следующее окно с классом ElementClient Window. 
+                    hwnd = WinApi.FindWindowEx(IntPtr.Zero, hwnd, "ElementClient Window", null);
+                    //Если наткнулись на ноль - значит выходим 
+                    if (hwnd == IntPtr.Zero) break;
+                    WinApi.GetWindowThreadProcessId(hwnd, out processIDtemp);
+
+                    if (processIDtemp == processId) return hwnd;
+                }
+                return IntPtr.Zero;
             }
             catch (Exception ex)
             {

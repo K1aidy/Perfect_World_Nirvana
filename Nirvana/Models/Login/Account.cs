@@ -109,6 +109,76 @@ namespace Nirvana.Models.Login
             }
         }
 
+        /// <summary>
+        /// Еда
+        /// </summary>
+        private Int32 food;
+        public Int32 Food
+        {
+            get { return food; }
+            set
+            {
+                food = value;
+                OnPropertyChanged("Food");
+            }
+        }
+
+        /// <summary>
+        /// Дерево
+        /// </summary>
+        private Int32 tree;
+        public Int32 Tree
+        {
+            get { return tree; }
+            set
+            {
+                tree = value;
+                OnPropertyChanged("Tree");
+            }
+        }
+
+        /// <summary>
+        /// Железо
+        /// </summary>
+        private Int32 iron;
+        public Int32 Iron
+        {
+            get { return iron; }
+            set
+            {
+                iron = value;
+                OnPropertyChanged("Iron");
+            }
+        }
+
+        /// <summary>
+        /// Камень
+        /// </summary>
+        private Int32 rock;
+        public Int32 Rock
+        {
+            get { return rock; }
+            set
+            {
+                rock = value;
+                OnPropertyChanged("Rock");
+            }
+        }
+
+        /// <summary>
+        /// Ткань
+        /// </summary>
+        private Int32 cloth;
+        public Int32 Cloth
+        {
+            get { return cloth; }
+            set
+            {
+                cloth = value;
+                OnPropertyChanged("Cloth");
+            }
+        }
+
         public event PropertyChangedEventHandler PropertyChanged;
         public void OnPropertyChanged([CallerMemberName]string prop = "")
         {

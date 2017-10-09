@@ -83,7 +83,7 @@ namespace Nirvana.Models.BotModels
         public ChatReader(My_Windows mw, bool s, bool b, bool d)
         {
             this.mw = mw;
-            this.My_skills_for_buf = mw.My_skills_for_buf;
+            this.My_skills_for_buf = mw.SkillArray.My_skills_for_buf;
             this.packet = mw.PacketSend;
             this.oph = mw.Oph;
             this.S = s;
@@ -149,7 +149,7 @@ namespace Nirvana.Models.BotModels
                             //проверки на класс у пересборщика нет, если пересборщик по каким-то причинам
                             //не может кинуть призыв, то ничего не происходит
                             //все боты, кроме пересборщика заходят в нирвану
-                            SimonSayMethods.CallShaman(mw.ShamansCall);
+                            SimonSayMethods.CallShaman(mw.SkillArray.ShamansCall);
                         }
                     }
                     catch (Exception ex)
@@ -445,13 +445,13 @@ namespace Nirvana.Models.BotModels
                                     int buf_id = CalcMethods.ReadInt(oph, Offsets.BaseAdress, Offsets.OffsetsIdBuf(b));
                                     if (buf_id == 75 || buf_id == 47 || buf_id == 225)
                                     {
-                                        int cd_skill = CalcMethods.ReadInt(oph, Offsets.BaseAdress, Offsets.OffsetsToCdSkill(mw.ChangeForm.Number));
+                                        int cd_skill = CalcMethods.ReadInt(oph, Offsets.BaseAdress, Offsets.OffsetsToCdSkill(mw.SkillArray.ChangeForm.Number));
                                         while (cd_skill > 0)
                                         {
                                             Thread.Sleep(cd_skill);
-                                            cd_skill = CalcMethods.ReadInt(oph, Offsets.BaseAdress, Offsets.OffsetsToCdSkill(mw.ChangeForm.Number));
+                                            cd_skill = CalcMethods.ReadInt(oph, Offsets.BaseAdress, Offsets.OffsetsToCdSkill(mw.SkillArray.ChangeForm.Number));
                                         }
-                                        Injects.Skill_Inject(mw.ChangeForm.Id, oph);
+                                        Injects.Skill_Inject(mw.SkillArray.ChangeForm.Id, oph);
                                         Thread.Sleep(1000);
                                         continue;
                                     }
@@ -464,6 +464,7 @@ namespace Nirvana.Models.BotModels
                     catch (Exception ex)
                     {
                         mw.Logging(new FormatText(ex.Message, Brushes.Red, 20, 1));
+                        
                     }
                     
                     #endregion
@@ -546,10 +547,7 @@ namespace Nirvana.Models.BotModels
         }
 
         public event PropertyChangedEventHandler PropertyChanged;
-        public void OnPropertyChanged([CallerMemberName]string prop = "")
-        {
-            if (PropertyChanged != null)
-                PropertyChanged(this, new PropertyChangedEventArgs(prop));
-        }
+        public void OnPropertyChanged([CallerMemberName]string prop = "") => PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(prop));
+
     }
 }

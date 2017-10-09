@@ -21,130 +21,19 @@ namespace Nirvana.Models.BotModels
         /// </summary>
         public static int selected_window = -1;
 
+        //забытое поле, надо вспомнить, зачем оно тут!
         public int old_count_res;
 
-        public event Log Log_event;
-
-        public void Logging(params TaskBar.FormatText[] text_log)
-        {
-            Log_event(text_log);
-        }
-
+        //перенести коллекцию в другой класс
         /// <summary>
         /// Временный список для алгоритма определения открытия новых и закрытия старых окон
         /// </summary>
-        public static ObservableCollection<My_Windows> my_windows_selecting_temp =
-            new ObservableCollection<My_Windows>();
+        public static ObservableCollection<My_Windows> my_windows_selecting_temp = new ObservableCollection<My_Windows>();
 
-        private static List<int> skills_for_buf = new List<int> {
-            #region мист
-            #endregion
-            #region сикер
-            1361,           //Железная плоть
-            1696,           //Светлая железная плоть
-            1697,           //Темная железная плоть
-            1342,           //Магия клинка вселенной
-            //1343,           //Магия клинка империи
-            1344,           //Техника черного воина
-            //1345,           //Техника кровавого меча
-            //1346,           //Техника каменного змея
-            #endregion
-            #region вар
-            77,             //Аура стали
-            422,            //Светлая аура стали
-            423,            //Темная аура стали
-            #endregion
-            #region маг
-            2258,           //Божественный ледяной доспех
-            2259,           //Демонический ледяной доспех
-            180,            //Ледяной доспех
-            458,            //Светлый ледяной доспех
-            459,            //Темный ледяной доспех
-            466,            //Светлое обморожение
-            467,            //Темное обморожение
-            2262,           //Божественное обморожение
-            2263,           //Демоническое обморожение
-            91,             //Обморожение
-            #endregion
-            #region танк
-            112,            //Облик тигра
-            518,            //Светлый облик тигра
-            519,            //Темный облик тигра
-            1980,           //Светлый облик тигра (усиленное)
-            1981,           //Темный облик тигра (усиленное)
-            512,            //Светлый рев главы стаи
-            513,            //Темный рев главы стаи
-            82,             //Рев главы стаи
-            83,             //Невероятная сила
-            516,            //Светлая невероятная сила
-            517,            //Темная невероятная сила
-            #endregion
-            #region дру
-            312,            //Обращение в лисицу
-            656,            //Светлое обращение в лисицу
-            657,            //Темное обращение в лисицу
-            1984,           //Светлое обращение в лисицу (усиленное)
-            1985,           //Темное обращение в лисицу (усиленное)
-            306,            //Стена шипов
-            648,            //Светлая стена шипов
-            649,            //Темная стена шипов
-            762,            //Наряд из цветов
-            763,            //Светлый наряд из цветов
-            764,            //Темный наряд из цветов
-            #endregion
-            #region прист
-            2222,           //Милость богов
-            121,            //Оплот духа
-            122,            //Мудрость небес
-            124,            //Благословенный символ
-            194,            //Оплот тела
-            1811,           //Крылья - Ночной танец
-            1869,           //Ночной танец
-            #endregion
-            #region лук
-            #endregion
-            #region син
-            1094,           //Метка крови
-            1276,           //Светлая метка крови
-            1277,           //Темная метка крови
-            1282,           //Светлая печать бешеного волка
-            #endregion
-            #region шам
-            1824,           //Призыв
-            #endregion
-            #region призрак
-            2561,           //Лунный стих
-            2756,           //Светлый лунный стих
-            2757            //Темный лунный стих
-            #endregion
-            #region коса
-            #endregion
-        };
-
-        private float x;
-        private float y;
-        private float z;
-        private string name;
-        private IntPtr handle;
-        private int processID;
-        private int classID;
-        private StateEnum stateThread;
-        private Packets packetSend;
-        private int wid;
-        private List<Skill> my_skills_for_buf = new List<Skill>();
-        private Skill changeForm;
-        private Skill shamansCall;
-
-
-        private BackgroundWorker backgroundWorker5;
-
-        private Thread thread;
-
-        private ChatReader chatRead;
-
-        //флаг, указывающий, открывашка ли это
-        private int rule = 0;
-
+        string name;
+        int processID;
+        int classID;
+        ChatReader chatRead;
         Bitmap icon;
 
         /// <summary>
@@ -172,9 +61,6 @@ namespace Nirvana.Models.BotModels
             }
         }
 
-        //дескриптор запущенного процесса
-        IntPtr oph;
-
         public string Name
         {
             get
@@ -184,10 +70,9 @@ namespace Nirvana.Models.BotModels
             set
             {
                 name = value;
-                OnPropertyChanged("name");
+                OnPropertyChanged("Name");
             }
         }
-
         public int ProcessID
         {
             get
@@ -200,7 +85,6 @@ namespace Nirvana.Models.BotModels
                 OnPropertyChanged("processID");
             }
         }
-
         public int ClassID
         {
             get
@@ -215,167 +99,36 @@ namespace Nirvana.Models.BotModels
             }
         }
 
-        public float X
-        {
-            get
-            {
-                return x;
-            }
+        public float X { get; set; }
+        public float Y { get; set; }
+        public float Z { get; set; }
 
-            set
-            {
-                x = value;
-            }
-        }
+        public IntPtr Handle { get; private set; }
 
-        public float Y
-        {
-            get
-            {
-                return y;
-            }
+        public BackgroundWorker BackgroundWorker { get; set; }
 
-            set
-            {
-                y = value;
-            }
-        }
-
-        public float Z
-        {
-            get
-            {
-                return z;
-            }
-
-            set
-            {
-                z = value;
-            }
-        }
-
-        public IntPtr Handle
-        {
-            get
-            {
-                return handle;
-            }
-        }
-
-        internal StateEnum StateThread
-        {
-            get
-            {
-                return stateThread;
-            }
-
-            set
-            {
-                stateThread = value;
-            }
-        }
-
-        public Thread Thread
-        {
-            get
-            {
-                return thread;
-            }
-
-            set
-            {
-                thread = value;
-            }
-        }
-
-        public BackgroundWorker BackgroundWorker5
-        {
-            get
-            {
-                return backgroundWorker5;
-            }
-
-            set
-            {
-                backgroundWorker5 = value;
-            }
-        }
-
+        internal StateEnum StateThread { get; set; }
+        internal SkillArray SkillArray { get; set; }
         internal ChatReader ChatRead
         {
             get
             {
                 return chatRead;
             }
-
             set
             {
                 chatRead = value;
                 OnPropertyChanged("ChatRead");
             }
         }
+        internal Packets PacketSend { get; private set; }
 
-        internal Packets PacketSend
-        {
-            get
-            {
-                return packetSend;
-            }
-
-        }
-
-        public int Wid
-        {
-            get
-            {
-                return wid;
-            }
-        }
-
-        public int Rule
-        {
-            get
-            {
-                return rule;
-            }
-
-            set
-            {
-                rule = value;
-            }
-        }
-
-        public List<Skill> My_skills_for_buf
-        {
-            get
-            {
-                return my_skills_for_buf;
-            }
-        }
-
-        public IntPtr Oph
-        {
-            get
-            {
-                return oph;
-            }
-        }
-
-        public Skill ChangeForm
-        {
-            get
-            {
-                return changeForm;
-            }
-        }
-
-        public Skill ShamansCall
-        {
-            get
-            {
-                return shamansCall;
-            }
-        }
+        //wid персонажа
+        public int Wid { get; set; }
+        //флаг, указывающий, открывашка ли это
+        public int Rule { get; set; }
+        //дескриптор запущенного процесса
+        public IntPtr Oph { get; private set; }
 
         //деструктор
         ~My_Windows()
@@ -388,54 +141,33 @@ namespace Nirvana.Models.BotModels
         //конструктор
         public My_Windows(IntPtr handle)
         {
-            this.handle = handle;
+            this.Handle = handle;
             //получаем id процесса по хендлу
             WinApi.GetWindowThreadProcessId(handle, out processID);
             //запускаем процесс и получаем его дескриптор
-            oph = WinApi.OpenProcess(WinApi.ProcessAccessFlags.All, false, ProcessID);
+            Oph = WinApi.OpenProcess(WinApi.ProcessAccessFlags.All, false, ProcessID);
             //создаем класс для отправки пакетов
-            packetSend = new Packets(oph);
+            PacketSend = new Packets(Oph);
             //получаем имя персонажа для данного клиента
-            name = CalcMethods.ReadString(oph, Offsets.BaseAdress, Offsets.OffsetsName);
+            Name = CalcMethods.ReadString(Oph, Offsets.BaseAdress, Offsets.OffsetsName);
             //узнаем wid
-            wid = CalcMethods.ReadInt(oph, Offsets.BaseAdress, Offsets.OffsetsWid);
+            Wid = CalcMethods.ReadInt(Oph, Offsets.BaseAdress, Offsets.OffsetsWid);
             //узнаем класс нашего персонажа
-            classID = CalcMethods.ReadInt(oph, Offsets.BaseAdress, Offsets.OffsetsClassId);
-            //читаем доступные скиллы-бафы
-            int skillCount = CalcMethods.ReadInt(oph, Offsets.BaseAdress, Offsets.OffsetsSkillsCount);
-            for (int s = 0; s < skillCount; s++)
-            {
-                int id = CalcMethods.ReadInt(oph, Offsets.BaseAdress, Offsets.OffsetsToIdSkill(s));
-                if (skills_for_buf.Contains(id))
-                {
-                    if (id == 112 || id == 518 || id == 519 || id == 1980 || id == 1981 ||  //танк
-                        id == 312 || id == 656 || id == 657 || id == 1984 || id == 1985 ||  //друид
-                        id == 1811 || id == 1869)                                           //прист
-                    {
-                        changeForm = new Skill(id, s);
-                        continue;
-                    }
-                    if (id == 1824)
-                    {
-                        shamansCall = new Skill(id, s);
-                        continue;
-                    }
-                    my_skills_for_buf.Add(new Skill(id, s));
-                }
-                    
-            }
+            classID = CalcMethods.ReadInt(Oph, Offsets.BaseAdress, Offsets.OffsetsClassId);
             //узнаем координаты
-            x = CalcMethods.ReadFloat(oph, Offsets.BaseAdress, Offsets.OffsetsX) / 10 + 400;
-            y = CalcMethods.ReadFloat(oph, Offsets.BaseAdress, Offsets.OffsetsY) / 10 + 550;
-            z = CalcMethods.ReadFloat(oph, Offsets.BaseAdress, Offsets.OffsetsZ) / 10;
+            X = CalcMethods.ReadFloat(Oph, Offsets.BaseAdress, Offsets.OffsetsX) / 10 + 400;
+            Y = CalcMethods.ReadFloat(Oph, Offsets.BaseAdress, Offsets.OffsetsY) / 10 + 550;
+            Z = CalcMethods.ReadFloat(Oph, Offsets.BaseAdress, Offsets.OffsetsZ) / 10;
             //выбираем картинку для нашего персонажа
             Select_Image(classID);
             //указываем состояние
-            stateThread = StateEnum.stop;
+            StateThread = StateEnum.stop;
+            //анализируем доступные скиллы
+            this.SkillArray = new SkillArray(Oph);
             //создаем поток для окна
-            this.BackgroundWorker5 = new BackgroundWorker();
-            this.BackgroundWorker5.WorkerSupportsCancellation = true;
-            this.BackgroundWorker5.DoWork += new DoWorkEventHandler(this.backgroundWorker5_DoWork);
+            this.BackgroundWorker = new BackgroundWorker();
+            this.BackgroundWorker.WorkerSupportsCancellation = true;
+            this.BackgroundWorker.DoWork += new DoWorkEventHandler(this.backgroundWorker5_DoWork);
         }
 
         [DllImport("gdi32.dll")]
@@ -489,29 +221,27 @@ namespace Nirvana.Models.BotModels
             }
         }
 
+        public event LogHandler Log_event;
+        public void Logging(params TaskBar.FormatText[] text_log) => Log_event?.Invoke(text_log);
+
         public event PropertyChangedEventHandler PropertyChanged;
-        public void OnPropertyChanged([CallerMemberName]string prop = "")
-        {
-            if (PropertyChanged != null)
-                PropertyChanged(this, new PropertyChangedEventArgs(prop));
-        }
+        public void OnPropertyChanged(String prop = "") => PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(prop));
 
         private void backgroundWorker5_DoWork(object sender, DoWorkEventArgs e)
         {
             while (StateThread == StateEnum.run)
             {
-                switch (rule){
+                switch (Rule){
                     case 0:
-                        chatRead.ReadChat_2();
+                        ChatRead.ReadChat_2();
                         break;
                     case 1:
-                        chatRead.ReadChat();
+                        ChatRead.ReadChat();
                         break;
                     case 2:
-                        chatRead.ReadChat_3();
+                        ChatRead.ReadChat_3();
                         break;
                 }
-                Thread.Sleep(3000);
             }
         }
 

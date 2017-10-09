@@ -23,7 +23,7 @@ using Nirvana.Models.BotModels;
 
 namespace Nirvana.ViewModels
 {
-    public delegate void Log(params FormatText[] textLog);
+    public delegate void LogHandler(params FormatText[] textLog);
 
     public class HeadViewModel : INotifyPropertyChanged
     {
@@ -97,7 +97,7 @@ namespace Nirvana.ViewModels
                 //выгружаем из бд офсеты
                 dbOffsets = new OffsetContext();
                 dbOffsets.Offsets.Load();
-                offsetsFromDb = dbOffsets.Offsets.FirstOrDefault((p) => p.Version == "1.5.5_2591");
+                offsetsFromDb = dbOffsets.Offsets.FirstOrDefault((p) => p.Version == "1.5.5_2596");
                 if (offsetsFromDb != null)
                     OpenOffsets();
                 //выгружаем настройки из бд, в будующем планируется выполнять этот шаг через вебсервис 
@@ -112,7 +112,7 @@ namespace Nirvana.ViewModels
                 {
                     settings = new Models.Login.Setting
                     {
-                        Downloader = "Downloader/12650 MailRuGameCenter/1265",
+                        Downloader = "Downloader/12660 MailRuGameCenter/1266",
                         Serialnumber = CalcMethods.GenerateSerialNumber(),
                         UserId_1 = CalcMethods.RandomStringValue(20),
                         UserId_2 = CalcMethods.RandomStringValue(20),
@@ -521,8 +521,8 @@ namespace Nirvana.ViewModels
                                                 if (mw != null)
                                                 {
                                                     mw.StateThread = StateEnum.run;
-                                                    if (!mw.BackgroundWorker5.IsBusy)
-                                                        mw.BackgroundWorker5.RunWorkerAsync();
+                                                    if (!mw.BackgroundWorker.IsBusy)
+                                                        mw.BackgroundWorker.RunWorkerAsync();
                                                     btn.Content = "Стоп";
                                                 }
                                             }
@@ -533,8 +533,8 @@ namespace Nirvana.ViewModels
                                             if (ListClients.work_collection[i] != null)
                                             {
                                                 ListClients.work_collection[i].StateThread = StateEnum.stop;
-                                                if (ListClients.work_collection[i].BackgroundWorker5.IsBusy)
-                                                    ListClients.work_collection[i].BackgroundWorker5.CancelAsync();
+                                                if (ListClients.work_collection[i].BackgroundWorker.IsBusy)
+                                                    ListClients.work_collection[i].BackgroundWorker.CancelAsync();
                                             }
                                         }
                                         btn.Content = "Старт";
@@ -598,10 +598,10 @@ namespace Nirvana.ViewModels
                                 for (int i = 0; i < ListClients.work_collection.Count(); i++)
                                 {
                                     if (ListClients.work_collection[i] != null)
-                                        if (ListClients.work_collection[i].BackgroundWorker5.IsBusy)
+                                        if (ListClients.work_collection[i].BackgroundWorker.IsBusy)
                                         {
                                             ListClients.work_collection[i].StateThread = StateEnum.stop;
-                                            ListClients.work_collection[i].BackgroundWorker5.CancelAsync();
+                                            ListClients.work_collection[i].BackgroundWorker.CancelAsync();
                                         }
                                     ListClients.work_collection[i] = null;
                                 }
@@ -884,8 +884,8 @@ namespace Nirvana.ViewModels
                                 {
                                     if (ListClients.work_collection[indexBox] != null)
                                     {
-                                        if (ListClients.work_collection[indexBox].BackgroundWorker5.IsBusy)
-                                            ListClients.work_collection[indexBox].BackgroundWorker5.CancelAsync();
+                                        if (ListClients.work_collection[indexBox].BackgroundWorker.IsBusy)
+                                            ListClients.work_collection[indexBox].BackgroundWorker.CancelAsync();
                                         ListClients.work_collection[indexBox].StateThread = StateEnum.stop;
                                         ListClients.work_collection[indexBox].Rule = 0;
                                     }
@@ -893,9 +893,9 @@ namespace Nirvana.ViewModels
                                     ListClients.work_collection[indexBox] = (My_Windows)(box.SelectedItem);
                                     ListClients.work_collection[indexBox].Rule = (indexBox == 0) ? 2 : ((indexBox == 10) ? 1 : 0);
                                     ListClients.work_collection[indexBox].ChatRead = (indexBox == 0) ?
-                                    new ChatReader(ListClients.work_collection[indexBox]) :
-                                    new ChatReader(ListClients.work_collection[indexBox],
-                                    CheckBoxSettings.GetValueCheckBox(1, indexBox), CheckBoxSettings.GetValueCheckBox(2, indexBox), CheckBoxSettings.GetValueCheckBox(3, indexBox));
+                                        new ChatReader(ListClients.work_collection[indexBox]) :
+                                        new ChatReader(ListClients.work_collection[indexBox],
+                                        CheckBoxSettings.GetValueCheckBox(1, indexBox), CheckBoxSettings.GetValueCheckBox(2, indexBox), CheckBoxSettings.GetValueCheckBox(3, indexBox));
                                     ListClients.work_collection[indexBox].Log_event += Logging;
                                 }
                                 foreach (ComboBox cmbx in comboBoxes.Where(p => p != box))

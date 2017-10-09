@@ -47,7 +47,7 @@ namespace Nirvana.Models.BotModels
                 WinApi.VirtualFreeEx(oph, auto_attakc_address, 10, WinApi.FreeType.Release);
                 WinApi.VirtualFreeEx(oph, hProcThread, 10, WinApi.FreeType.Release);
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 throw ex;
             }
@@ -187,7 +187,7 @@ namespace Nirvana.Models.BotModels
             catch (Exception ex)
             {
                 throw ex;
-            }     
+            }
         }
 
         /// <summary>
@@ -310,7 +310,40 @@ namespace Nirvana.Models.BotModels
             {
                 throw ex;
             }
-            
+
         }
+
+        public static void OpenWindow(IntPtr oph)
+        {
+            byte[] openWindowPacket = new byte[]
+            {
+                            0x60,                                       //pushad
+                            0xA1, 0xB0, 0xBA, 0xE4, 0x00,               //MOV EAX,DWORD PTR DS:[0E4BAB0]      ; PTR to ASCII "PZ@"
+                            0x8B, 0x48, 0x1C,                           //MOV ECX,DWORD PTR DS:[EAX+1C]
+                            0x8B, 0x49, 0x24,                           //MOV ECX, DWORD PTR DS:[ECX+24]
+                            0xBA, 0x98, 0xF3, 0x0C, 0x31,               //mov edx, WID
+                            0xB8, 0xD0, 0xAD, 0x41, 0x00,               //mov eax, 0041ADD0
+                            0xFF, 0xD0,                                 //call 0041ADD0
+                            0x61,                                       //popad
+                            0xC3                                        //ret
+            };
+
+
+            // ---- освобождаем память под опкод в памяти клиента
+            IntPtr openWindowOpcodeAddress = WinApi.VirtualAllocEx(oph, IntPtr.Zero, openWindowPacket.Length, WinApi.AllocationType.Commit, WinApi.MemoryProtection.ExecuteReadWrite);
+            // ---- записываем опкод в освобожденную память
+            Int32 number_of_bytes_written_3;
+            WinApi.WriteProcessMemory(oph, (Int32)openWindowOpcodeAddress, openWindowPacket, openWindowPacket.Length, out number_of_bytes_written_3);
+            // ---- запускаем наш код
+            IntPtr lpThreadId;
+            IntPtr hProcThread = WinApi.CreateRemoteThread(oph, IntPtr.Zero, 0, (IntPtr)openWindowOpcodeAddress, IntPtr.Zero, 0, out lpThreadId);
+            // ---- Ожидаем завершения функции
+            WinApi.WaitForSingleObject(hProcThread, WinApi.INFINITE);
+            // ---- Подчищаем за собой
+            WinApi.VirtualFreeEx(oph, hProcThread, openWindowPacket.Length, WinApi.FreeType.Release);
+            WinApi.VirtualFreeEx(oph, openWindowOpcodeAddress, openWindowPacket.Length, WinApi.FreeType.Release);
+            //WinApi.VirtualFreeEx(oph, nameWindowAddress, nameRev.Length, WinApi.FreeType.Release);
+        }
+
     }
 }

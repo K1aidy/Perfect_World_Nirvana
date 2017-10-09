@@ -70,4 +70,3 @@ N:\C#\ПВ\Perfect_World_Nirvana\Nirvana\obj\Debug\Nirvana.Properties.Resources.
 N:\C#\ПВ\Perfect_World_Nirvana\Nirvana\obj\Debug\Nirvana.csproj.GenerateResource.Cache
 N:\C#\ПВ\Perfect_World_Nirvana\Nirvana\obj\Debug\Nirvana.exe
 N:\C#\ПВ\Perfect_World_Nirvana\Nirvana\obj\Debug\Nirvana.pdb
-N:\C#\ПВ\Perfect_World_Nirvana\Nirvana\obj\Debug\Nirvana.csprojResolveAssemblyReference.cache

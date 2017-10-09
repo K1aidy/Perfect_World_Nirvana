@@ -396,7 +396,22 @@
                                 <DataTemplate>
                                     <StackPanel Orientation="Horizontal" Background="#F2CAD4DE" Height="25">
                                         <TextBlock Width="120" TextAlignment="Center" Text="{Binding Nickname}" Height="20" Background="#F2CAD4DD"></TextBlock>
-                                        <TextBlock Width="80" TextAlignment="Center" Text="{Binding Server}" Margin="10, 0, 0, 0"  Height="20" Background="#F2CAD4DD"></TextBlock>
+                                        <TextBlock Width="60" TextAlignment="Center" Text="{Binding Server}" Margin="10, 0, 0, 0"  Height="20" Background="#F2CAD4DD"></TextBlock>
+                                        <CheckBox VerticalAlignment="Center" IsChecked="True"></CheckBox>
+                                        <StackPanel.ToolTip>
+                                            <StackPanel Orientation="Horizontal">
+                                                <Image Width="16" Height="16" Margin="5" Source="pack://application:,,,/Resources/food.png" Stretch="Fill"/>
+                                                <TextBlock Height="16" Margin="5" Text="{Binding Food}"/>
+                                                <Image Width="16" Height="16" Margin="5" Source="pack://application:,,,/Resources/iron.jpg" Stretch="Fill"/>
+                                                <TextBlock Height="16" Margin="5" Text="{Binding Iron}"/>
+                                                <Image Width="16" Height="16" Margin="5" Source="pack://application:,,,/Resources/tree.jpg" Stretch="Fill"/>
+                                                <TextBlock Height="16" Margin="5" Text="{Binding Tree}"/>
+                                                <Image Width="16" Height="16" Margin="5" Source="pack://application:,,,/Resources/rock.jpg" Stretch="Fill"/>
+                                                <TextBlock Height="16" Margin="5" Text="{Binding Rock}"/>
+                                                <Image Width="16" Height="16" Margin="5" Source="pack://application:,,,/Resources/cloth.jpg" Stretch="Fill"/>
+                                                <TextBlock Height="16" Margin="5" Text="{Binding Cloth}"/>
+                                            </StackPanel>
+                                        </StackPanel.ToolTip>
                                     </StackPanel>
                                 </DataTemplate>
                             </ListBox.ItemTemplate>
@@ -405,8 +420,9 @@
                     <Grid Margin="0,259,0,10">
                         <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
                             <!--Кнопка удаления аккаунта-->
-                            <Button Width="40" Height="40" BorderThickness="0" Focusable="False"  Margin="5, 0, 5, 0"
-                                    Command="{Binding DeleteAccountCommand}" CommandParameter="{Binding ElementName=listAccount, Path=SelectedItem}">
+                            <Button Width="35" Height="35" BorderThickness="0" Focusable="False"  Margin="5, 0, 5, 0"
+                                    Command="{Binding DeleteAccountCommand}" CommandParameter="{Binding ElementName=listAccount, Path=SelectedItem}"
+                                    ToolTip="Удалить аккаунт">
                                 <Button.ContentTemplate>
                                     <DataTemplate>
                                         <StackPanel Orientation="Horizontal">
@@ -416,8 +432,9 @@
                                 </Button.ContentTemplate> />
                             </Button>
                             <!--Кнопка добавления аккаунта-->
-                            <Button Width="40" Height="40" Margin="5, 0, 5, 0" BorderThickness="0" Focusable="False"
-                                    Command="{Binding AddAccountCommand}" CommandParameter="{Binding ElementName=listAccount, Path=SelectedItem}">
+                            <Button Width="35" Height="35" Margin="5, 0, 5, 0" BorderThickness="0" Focusable="False"
+                                    Command="{Binding AddAccountCommand}" CommandParameter="{Binding ElementName=listAccount, Path=SelectedItem}"
+                                    ToolTip="Добавить новый аккаунт">
                                 <Button.ContentTemplate>
                                     <DataTemplate>
                                         <StackPanel Orientation="Horizontal">
@@ -427,8 +444,9 @@
                                 </Button.ContentTemplate> />
                             </Button>
                             <!--Кнопка настроек для авторизации-->
-                            <Button Width="40" Height="40" Margin="5, 0, 5, 0" BorderThickness="0" Focusable="False"
-                                    Command="{Binding LoginSettingsOpneCommand}" CommandParameter="{Binding ElementName=listAccount, Path=SelectedItem}">
+                            <Button Width="35" Height="35" Margin="5, 0, 5, 0" BorderThickness="0" Focusable="False"
+                                    Command="{Binding LoginSettingsOpneCommand}" CommandParameter="{Binding ElementName=listAccount, Path=SelectedItem}"
+                                    ToolTip="Настройки авторизации">
                                 <Button.ContentTemplate>
                                     <DataTemplate>
                                         <StackPanel Orientation="Horizontal">
@@ -438,12 +456,25 @@
                                 </Button.ContentTemplate> />
                             </Button>
                             <!--Кнопка запуска клиента-->
-                            <Button Width="40" Height="40" Margin="5, 0, 5, 0" BorderThickness="0" Focusable="False"
-                                    Command="{Binding PlayCommand}" CommandParameter="{Binding ElementName=listAccount, Path=SelectedItem}">
+                            <Button Width="35" Height="35" Margin="5, 0, 5, 0" BorderThickness="0" Focusable="False"
+                                    Command="{Binding PlayCommand}" CommandParameter="{Binding ElementName=listAccount, Path=SelectedItem}"
+                                    ToolTip="Запустить клиент">
                                 <Button.ContentTemplate>
                                     <DataTemplate>
                                         <StackPanel Orientation="Horizontal">
                                             <Image Source="pack://application:,,,/Resources/play.jpg" Stretch="Fill"/>
+                                        </StackPanel>
+                                    </DataTemplate>
+                                </Button.ContentTemplate> />
+                            </Button>
+                            <!--Кнопка запуска протыкивания домоквеста-->
+                            <Button Width="35" Height="35" Margin="5, 0, 5, 0" BorderThickness="0" Focusable="False"
+                                    Command="{Binding PlayCommand}" CommandParameter="{Binding ElementName=listAccount, Path=SelectedItem}"
+                                    ToolTip="Сделать всем домоквест">
+                                <Button.ContentTemplate>
+                                    <DataTemplate>
+                                        <StackPanel Orientation="Horizontal">
+                                            <Image Source="pack://application:,,,/Resources/play_all.jpg" Stretch="Fill"/>
                                         </StackPanel>
                                     </DataTemplate>
                                 </Button.ContentTemplate> />
